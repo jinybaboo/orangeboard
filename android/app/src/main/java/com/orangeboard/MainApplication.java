@@ -20,6 +20,12 @@ import expo.modules.ReactNativeHostWrapper;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+// 채널톡 관련 import
+import com.zoyi.channel.plugin.android.ChannelIO;  //채널톡 추가
+import com.zoyi.channel.rn.RNChannelIOPackage;  //채널톡 추가
+
+
+
 public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
     this,
@@ -65,6 +71,8 @@ public class MainApplication extends Application implements ReactApplication {
 
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     ApplicationLifecycleDispatcher.onApplicationCreate(this);
+
+    ChannelIO.initialize(this); //채널톡 추가
   }
 
   @Override

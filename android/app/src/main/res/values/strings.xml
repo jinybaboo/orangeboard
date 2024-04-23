@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">orangeboard</string>
+    <string name="app_name">오렌지보드</string>
+    <string name="kakao_app_key">64745d45b5067287b67ecd9a796c6713</string>
 </resources>

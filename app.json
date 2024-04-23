@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "orangeboard",
+    "name": "오렌지보드",
     "slug": "orangeboard",
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
     ]
   },
-  "name": "orangeboard"
+  "name": "orangeboard",
+  "displayName": "오렌지보드"
 }

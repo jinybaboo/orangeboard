@@ -9,6 +9,12 @@ import com.facebook.react.ReactRootView;
 
 import expo.modules.ReactActivityDelegateWrapper;
 
+import com.dooboolab.naverlogin.RNNaverLoginModule;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+
+
 public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +22,23 @@ public class MainActivity extends ReactActivity {
     // coloring the background, status bar, and navigation bar.
     // This is required for expo-splash-screen.
     setTheme(R.style.AppTheme);
-    super.onCreate(null);
+    super.onCreate(savedInstanceState);
+
+    //안드로이드 푸시알람 헤드업 처리
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {    
+        NotificationChannel notificationChannel = new NotificationChannel("500", "MainChannel", NotificationManager.IMPORTANCE_HIGH);
+        notificationChannel.setShowBadge(true);
+        notificationChannel.setDescription("Test Notifications");
+        notificationChannel.enableVibration(true);
+        notificationChannel.enableLights(true);
+        notificationChannel.setVibrationPattern(new long[]{400, 200, 400});
+        //notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(notificationChannel);
+    }
+
+
+    RNNaverLoginModule.initialize(this);
   }
 
   /**

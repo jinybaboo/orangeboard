@@ -1,4 +1,9 @@
 #import "AppDelegate.h"
+#import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
+#import <Firebase.h>
+#import <RNKakaoLogins.h>
+
+
 
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -18,6 +23,9 @@
 
 #import <react/config/ReactNativeConfig.h>
 
+#import <ChannelIOFront/ChannelIOFront-swift.h> // 채널톡 추가
+
+
 static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 @interface AppDelegate () <RCTCxxBridgeDelegate, RCTTurboModuleManagerDelegate> {
@@ -33,10 +41,12 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure];
+   
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [self.reactDelegate createBridgeWithDelegate:self launchOptions:launchOptions];
-
+  
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
@@ -54,9 +64,12 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  // [ChannelIO initialize:application]; // 채널톡 추가
 
   [super application:application didFinishLaunchingWithOptions:launchOptions];
 
+  
   return YES;
 }
 
@@ -97,7 +110,24 @@ static NSString *const kRNConcurrentRoot = @"concurrentRoot";
 
 // Linking API
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  
+  // kakao login
+  if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
+     return [RNKakaoLogins handleOpenUrl: url];
+  }
+  
+  // for naver login
+  if ([url.scheme isEqualToString:@"naverloginfinal"]) {
+    return [[NaverThirdPartyLoginConnection getSharedInstance] application:application openURL:url options:options];
+  }
+  
+  
   return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
+    
+  
+
+  return YES;
+
 }
 
 // Universal Links

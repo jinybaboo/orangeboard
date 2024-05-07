@@ -50,9 +50,9 @@ function AppInnerForRedux(){
     useEffect(()=>{
         //현재 페이지 정보 저장하기 
         setCurrentPage(dispatch, 'Home');
-       
         prepare();
     },[]);
+
 
 
      

@@ -1,12 +1,8 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {AntDesign, Ionicons} from '@expo/vector-icons';
-import Contents from "../screens/Contents";
-import Start from "../screens/Intro";
-import Mypage from "../screens/Mypage";
-import Creator from "../screens/Creators";
 import { Image } from "react-native";
-import Home from "../screens/Home";
+import Home_W from "../pages/Home_W";
 
 
 
@@ -54,7 +50,7 @@ const Tabs = () => {
         >
             <Tab.Screen 
                 name="홈" 
-                component={Home} 
+                component={Home_W} 
                 options={{
                     // tabBarLabelStyle:{
                     //     color:'#000',
@@ -80,7 +76,7 @@ const Tabs = () => {
 
             <Tab.Screen 
                 name="리포트" 
-                component={Contents}
+                component={Home_W}
                 options={{
                     tabBarIcon :({focused, color, size}:any) =>{
                         return  focused?<Image source={require('../assets/icons/contents_on.png')}/>:<Image source={require('../assets/icons/contents_off.png')}/>
@@ -90,7 +86,7 @@ const Tabs = () => {
 
             <Tab.Screen 
                 name="크리에이터" 
-                component={Creator}
+                component={Home_W}
                 options={{
                     tabBarIcon :({focused, color, size}:any) =>{
                         return  focused?<Image source={require('../assets/icons/creator_on.png')}/>:<Image source={require('../assets/icons/creator_off.png')}/>
@@ -99,7 +95,7 @@ const Tabs = () => {
             />
             <Tab.Screen 
                 name="내정보" 
-                component={Mypage}
+                component={Home_W}
                 options={{
                     tabBarIcon :({focused, color, size}:any) =>{
                         return  focused?<Image source={require('../assets/icons/my_on.png')}/>:<Image source={require('../assets/icons/my_off.png')}/>

@@ -91,12 +91,12 @@ const PushAlertInner = ({animationPositionY}:any)=>{
         closePush();
 
         if (type=='portfolio-issue'){
-            checkNavigator(navigation, 'home' , {isReload:'n'})
+            checkNavigator(navigation, 'home' , {isReload:'n'});
             setTimeout(()=>{
                 navigation.navigate("PortrolioIssueTalk_N" as never, {param:{pageName}});
             },500)
         }else if(type=='reportComment'){
-            checkNavigator(navigation, 'home' , {isReload:'n'})
+            checkNavigator(navigation, 'home' , {isReload:'n'});
             let result:any =  await getReportContent(ReportId);
             const title = result?.report?.title;
 
@@ -104,7 +104,7 @@ const PushAlertInner = ({animationPositionY}:any)=>{
                 navigation.navigate("ReportReply_W" as never, {param:{ReportId, title, from:'report'}});
             },500)
         }else if(type=='Reports'){
-            checkNavigator(navigation, 'home' , {isReload:'n'})
+            checkNavigator(navigation, 'home' , {isReload:'n'});
             let result:any =  await getReportContent(ReportId);
             const seoTitle = result?.report?.seoTitle;
 
@@ -118,17 +118,17 @@ const PushAlertInner = ({animationPositionY}:any)=>{
                 }
             },500)
         }else if (type=='portfolio'){
-            checkNavigator(navigation, 'home' , {isReload:'n'})
+            checkNavigator(navigation, 'home' , {isReload:'n'});
             setTimeout(()=>{
                 navigation.navigate("PortfolioContent_W" as never, {param:{pageName, PortfolioId}});
             },500)
         }else if(type=='portfolio-comment'){
-            checkNavigator(navigation, 'home' , {isReload:'n'})
+            checkNavigator(navigation, 'home' , {isReload:'n'});
             setTimeout(()=>{
                 navigation.navigate("ReportReply_W" as never, {param:{ReportId:PortfolioId, title:pageName, from:'portfolio'}});
             },500)
         }else{
-            checkNavigator(navigation, 'home' , {isReload:'n'})
+            checkNavigator(navigation, 'home' , {isReload:'n'});
         }
     }
 

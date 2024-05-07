@@ -25,7 +25,7 @@ const os = Platform.OS;
 const ScrollView = styled.ScrollView`
     flex:1; background-color: #FFFFFF; padding: 22px 22px; 
 `
-
+ 
 const TopBanner = styled.View`
     width: 100%; height:118px; background-color: ${colors.orangeBorder}; border-radius: 5px; align-items: center; justify-content: center;
 `

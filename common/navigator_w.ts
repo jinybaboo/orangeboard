@@ -59,8 +59,9 @@ export async function handleDataFromWeb(navigation:any, data:any){
 
 
 // checkNavigator(navigation, 'home' , {isReload:'n'})
-export function checkNavigator(navigation:any, value:string, param:any){
-    console.log(value);
+export async function checkNavigator(navigation:any, value:string, param:any){
+    // console.log(value);
+    await EncryptedStorage.setItem('currentPage', value);
 
     if(value==='login'){
         navigation.navigate("Login_N" as never);

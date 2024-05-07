@@ -18,6 +18,7 @@ import VersionCheck from "react-native-version-check";
 import { Alert, Linking, Platform } from "react-native";
 import { checkNavigator } from "../../common/navigator_w";
 import { getAppAdminInfo, validateAccessToken } from "../../common/fetchData";
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const os = Platform.OS;
 
@@ -95,60 +96,46 @@ const BottomTab = () =>{
 
     const [currentVersion, setCurrentVersion] = useState('notReady');
     const [isShowUpdateAlarm, setIsShowUpdateAlarm] = useState(1);
+    const [pageNow, setPageNow] = useState('home')
 
     const [isLogin, setIsLogin] = useState(false);
     
     const isFocused = useIsFocused();
         
-    async function loginCheck(){
-        const tokenStatus = await validateAccessToken();
-        console.log(tokenStatus)
-        if(tokenStatus=='expired'){
-            setIsLogin(false);
-        }else{
-            setIsLogin(true);
-        }
-    }
+    // async function loginCheck(){
+    //     const tokenStatus = await validateAccessToken();
+    //     console.log(tokenStatus)
+    //     if(tokenStatus=='expired'){
+    //         setIsLogin(false);
+    //     }else{
+    //         setIsLogin(true);
+    //     }
+    // }
 
     //앱 시작시 토큰 유효성 체크 및 로그인 상태 저옵 리덕스에 넣기!!
+    async function getData(){
+        let pageNow:any = await EncryptedStorage.getItem('currentPage');
+        console.log(pageNow);
+        
+    }
     useEffect(()=>{
-        loginCheck();
-        preAppVersion();
-    },[]);
+        console.log('useEffect')
+        getData();
 
-
-    async function preAppVersion(){
-        let {version_android, version_ios, isShowUpdateAlarmAndroid, isShowUpdateAlarmIos} = await getAppAdminInfo();
-        setIsShowUpdateAlarm(os==='ios'?isShowUpdateAlarmIos:isShowUpdateAlarmAndroid)
-        setCurrentVersion(os==='ios'?version_ios:version_android);
-
-        const appVersion = VersionCheck.getCurrentVersion();
-
-        if(currentVersion!='notReady' && isShowUpdateAlarm && (appVersion!=currentVersion)){
-            Alert.alert( //alert 사용					
-                '안내', '오렌지보드 앱이 업데이트 되었습니다.\n버전 업데이트 후 이용해 주세요.', [ //alert창 문구 작성				
-                    {text: '확인', onPress: () => {openPlayStore()} }, 
-                ]				
-            );		
-        }
-    }
-
-
-    function openPlayStore(){
-        let url = os=='ios'?'https://apps.apple.com/kr/app/%EC%98%A4%EB%A0%8C%EC%A7%80%EB%B3%B4%EB%93%9C-%EC%A3%BC%EC%8B%9D%ED%86%B5%ED%95%A9%ED%94%8C%EB%9E%AB%ED%8F%BC/id1661760963':'market://details?id=com.orangeboard';
-        Linking.openURL(url);
-    }
-
-
+        // loginCheck();
+    });
    
    
     const pageStack = useSelector((state:RootState)=>state.user.pageStack);
-    let pageNow = pageStack[pageStack.length-1];
-
+    // let pageNow = pageStack[pageStack.length-1];
     let isShowTab = false;
-   
 
-    if(pageNow=='Home' || pageNow=='Portfolio' || pageNow=='Contents'|| pageNow=='Creators' || pageNow=='Mypage'){
+    
+
+    
+
+
+    if(pageNow=='home' || pageNow=='Portfolio' || pageNow=='Contents'|| pageNow=='Creators' || pageNow=='Mypage'){
         isShowTab=true;
     }
 
@@ -178,9 +165,9 @@ const BottomTab = () =>{
                     <BottomTabTxt style={pageNow=='Portfolio'?{color:colors.orangeBorder}:{color:'#d9d9d9'}}>포트폴리오</BottomTabTxt>
                 </BottomTabPress>
 
-                <BottomTabPress onPress={()=>{}}>
-                    <Btm3Img  source={pageNow=='Home'?require('../../assets/icons/btm3_a.png'):require('../../assets/icons/btm3.png')}/>
-                    <BottomTabTxt style={pageNow=='Home'?{color:colors.orangeBorder}:{color:'#d9d9d9'}}>홈</BottomTabTxt>
+                <BottomTabPress onPress={()=>{checkNavigator(navigation, 'home' , {isReload:'n'})}}>
+                    <Btm3Img  source={pageNow=='home'?require('../../assets/icons/btm3_a.png'):require('../../assets/icons/btm3.png')}/>
+                    <BottomTabTxt style={pageNow=='home'?{color:colors.orangeBorder}:{color:'#d9d9d9'}}>홈</BottomTabTxt>
                 </BottomTabPress>
                 
                 <BottomTabPress onPress={()=>{}}>

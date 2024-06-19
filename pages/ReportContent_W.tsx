@@ -7,19 +7,18 @@ import { BASE_URL } from "../common/variables_w";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
-import { Linking } from "react-native";
+import { BackHandler, Linking } from "react-native";
 import { CaptureProtection } from "react-native-capture-protection";
 import Loader from "../assets/component_w/Loader";
+import { sendDataToWeb } from "../common/common_w";
 
 const ReportContent_W = (props:any) => {
-    const {pageName, seoTitle} = props.route.params.param;
+    const {pageName, seoTitle, postType} = props.route.params.param;
     const [isLoading, setIsLoading] = useState(true);
 
     const navigation:any = useNavigation();
     const webViewRef:any = useRef(null);
-    const webviewUrl = `${BASE_URL}/report/content?isApp=app&pageName=${pageName}&seoTitle=${seoTitle}`;
-
-
+    const webviewUrl = `${BASE_URL}/report/content?isApp=app&pageName=${pageName}&seoTitle=${seoTitle}&postType=${postType}`;
 
 
     function handleLoadEnd(){
@@ -46,6 +45,7 @@ const ReportContent_W = (props:any) => {
             return false;
         }
     };
+
 
 
     // 웹뷰에서 a태그 링크시 새창으로 열리게 처리 2

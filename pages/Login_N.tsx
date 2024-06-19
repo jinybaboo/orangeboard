@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import { useNavigation } from "@react-navigation/native";
-import { Alert, Animated, Platform, Pressable, TouchableOpacity, View } from "react-native";
+import { Alert, Animated, DeviceEventEmitter, Platform, Pressable, TouchableOpacity, View } from "react-native";
 import { checkNavigator} from "../common/navigator_w";
 
 import {login,loginWithKakaoAccount,logout,getProfile as getKakaoProfile,unlink,} from "@react-native-seoul/kakao-login";
@@ -392,9 +392,16 @@ const Login_N = (props:any) => {
         await EncryptedStorage.setItem('accessToken',accessToken);
         await EncryptedStorage.setItem('refreshToken',refreshToken);
         setTimeout(()=>{
-            checkNavigator(navigation, 'home' , {isReload:'y'});
+            checkNavigator(navigation, 'home' , {isReload:'n'});
         },10)
     }
+
+
+    useEffect(() => {
+        return () => {
+            DeviceEventEmitter.emit('backFromHomeReload');
+        }
+    }, []);
 
 
     return (

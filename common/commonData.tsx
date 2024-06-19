@@ -12,14 +12,6 @@ let API_URL_APP = 'https://app.orangeboard.kr/'; //앱전용(구버전)
 
 let URL =  API_URL;
 
-export async function getAppAdminInfo(){
-    try {
-        const {data} = await axios.get(`https://manage.orangeboard.co.kr/v1/managements/app-info`);
-        return data[0];
-    } catch (error:any) {
-        console.error('getAppAdminInfo ',error.response.data);
-    }
-}
 
 
 export async function getHomePopular(order:string){
@@ -228,8 +220,6 @@ export async function getCorpBySearch(word:string,dispatch:any, navigation:any){
 export async function getValuationPrice(stockCode:string, dispatch:any, navigation:any){
     let accessToken:any = await EncryptedStorage.getItem('accessToken');
     if(accessToken=='expired'){accessToken=''}
-    //console.log(accessToken);
-    //accessToken = await validateAccessToken(dispatch, navigation);
     const data:any ={stockCode}
     try {
         const response = await axios.post(`https://value.orangedev.shop/v1/value`,data, {headers:{Authorization: accessToken}});
@@ -1083,7 +1073,7 @@ export async function insertAgreementAndPrivacy(refreshToken:string, check3:bool
     const isAppPushNight:number = check5?1:0;
 
     const data ={ isAdvertiseApproval,isAppPush,isAppPushNight,deviceInfo,deviceToken}
-    console.log(data)
+    
     try {
         const response:any = await axios.post(`${URL}v2/auth/join`, data, {withCredentials: true,});
         const refreshToken:string = response.headers["set-cookie"][0].split(';')[0].replace('8r2b0o1=','');

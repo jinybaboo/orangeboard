@@ -38,11 +38,11 @@ const initialState = {
   //리포트 이동시 카테고리 저장
   reportCate:'리포트 카테고리',
 
-  //포트폴리오 운영자 이동시 정보
+  //고수의계좌 운영자 이동시 정보
   pageName:'',
   PortfolioId:'',
 
-  //포트폴리오 구독 결제 시 
+  //고수의계좌 구독 결제 시 
   selectedPortData:{},
 };
 

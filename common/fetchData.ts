@@ -170,8 +170,6 @@ export const getPayment_ProductReportAndPort = async() =>{
 }
 export const getPayment_SubscriptionProduct = async(ProductOptionId:any) =>{
     let accessToken:any = await EncryptedStorage.getItem('accessToken');
-    console.log('getPayment_SubscriptionProduct');
-    
     try {
         const res = await axios.get(`${DATA_FETCH_URL}/v2/users/subscription/checkout?ProductOptionId=${ProductOptionId}`, {headers:{'Authorization' : accessToken,}});
         return res.data;
@@ -182,7 +180,6 @@ export const getPayment_SubscriptionProduct = async(ProductOptionId:any) =>{
 
 export async function insertReportPaymentAndroid(purchaseToken:any, donationCode:any){
     let accessToken:any = await EncryptedStorage.getItem('accessToken');
-    console.log(accessToken);
 
     const data = {purchaseToken, donationCode}
     try {
@@ -223,6 +220,18 @@ export async function getPortChat(pageName:string, bwdId:string, fwdId:string, p
         return false;
     }
 }
+
+export async function getMyProfile(){
+    let accessToken:any = await EncryptedStorage.getItem('accessToken');
+    try {
+        const res = await axios.get(`${DATA_FETCH_URL}/v1/profile`, {headers:{'Authorization' : accessToken}});
+        return res?.data;
+    } catch (error:any) {
+        console.error('getMyProfile ',error?.response?.data);
+        return false;
+    }
+}
+
 
 export async function getReportShortUrlInfo(shortUrl:string){
     let accessToken:any = await EncryptedStorage.getItem('accessToken');
@@ -281,6 +290,8 @@ export async function validateAccessToken(){
         return newAccessToken;
     }
 }
+
+
 
 export async function getAccessTokenWithRefreshToken(){
     // console.log('refreshToken으로 신규 액세스 토큰 발급');

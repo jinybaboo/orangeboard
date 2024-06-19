@@ -376,7 +376,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.7;
+				MARKETING_VERSION = 2.1.4;
 				NEW_SETTING = "";
 				NEW_SETTING1 = "";
 				NEW_SETTING2 = "";
@@ -412,7 +412,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.7;
+				MARKETING_VERSION = 2.1.4;
 				NEW_SETTING = "";
 				NEW_SETTING1 = "";
 				NEW_SETTING2 = "";

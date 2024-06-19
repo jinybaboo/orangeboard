@@ -8,6 +8,8 @@ import RNFS from 'react-native-fs';
 
 export async function handleDataFromWeb(navigation:any, data:any){
     const {type, value, param} = JSON.parse(data);
+
+    
    
     if(type==='navi'){
         checkNavigator(navigation, value, param);
@@ -60,7 +62,6 @@ export async function handleDataFromWeb(navigation:any, data:any){
 
 // checkNavigator(navigation, 'home' , {isReload:'n'})
 export async function checkNavigator(navigation:any, value:string, param:any){
-    // console.log(value);
     await EncryptedStorage.setItem('currentPage', value);
 
     if(value==='login'){
@@ -86,7 +87,7 @@ export async function checkNavigator(navigation:any, value:string, param:any){
         navigation.navigate("ReportReply_W" as never, {param:param});
     }
 
-    //포트폴리오
+    //고수의계좌
     else if(value==='portfolio'){
         navigation.navigate("Portfolio_W" as never);
     }else if(value==='portfolioList'){
@@ -138,7 +139,7 @@ export async function checkNavigator(navigation:any, value:string, param:any){
 
     //마이페이지
     else if(value==='mypage'){
-        navigation.navigate("Mypage_W" as never, {param:param});
+        navigation.navigate("Mypage_W" as never);
     }else if(value==='mypageSetting'){
         navigation.navigate("MypageSetting_W" as never, {param:param});
     }else if(value==='mypageOrangeManage'){
@@ -181,6 +182,22 @@ export async function checkNavigator(navigation:any, value:string, param:any){
         navigation.navigate("Market_W" as never, {param:param});
     }
 
+    //Farm
+    else if(value==='farm'){
+        navigation.navigate("Farm_W" as never, {param:param});
+    }else if(value==='farmOwner'){
+        navigation.navigate("FarmOwner_W" as never, {param:param});
+    }
+
+
+    //Search
+    else if(value==='search'){
+        navigation.navigate("Search_W" as never);
+    }else if(value==='searchResult'){
+        navigation.navigate("SearchResult_W" as never, {param:param});
+    }
+
+
     //기타
     else if(value==='authPolicy'){
         navigation.navigate("Policy_W" as never, {param:param});
@@ -203,5 +220,4 @@ export async function checkNavigator(navigation:any, value:string, param:any){
     }else if(value==='etcIntroAnalysis'){
         navigation.navigate("IntroAnalysis_W" as never, {param:param});
     }
-
 }

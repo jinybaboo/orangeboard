@@ -128,7 +128,7 @@ export const PaymentSubPort_N = (props:any) => {
         }
 
         const data = await getPayment_SubscriptionProduct(ProductOptionId);
-        console.log(data);
+        // console.log(data);
         
         setProductData(data);
         setIsLoading(false)
@@ -180,7 +180,7 @@ export const PaymentSubPort_N = (props:any) => {
         
         try {
             const items:any = await getSubscriptions({skus});
-            // console.log(items[0])
+            // console.log(items)
             if(os=='android'){
                 console.log('결제선택 길이 : ',items[0].subscriptionOfferDetails.length);
 
@@ -232,6 +232,8 @@ export const PaymentSubPort_N = (props:any) => {
      useEffect(()=>{
         // 결제 성공시 listener
         let purchaseUpdateSubscription:any ='';
+        console.log('결제 성공 리스너 작동!!!');
+        
 
         setTimeout(()=>{
 
@@ -244,11 +246,14 @@ export const PaymentSubPort_N = (props:any) => {
 
                     const receipt = purchase?.transactionReceipt ? purchase?.transactionReceipt : purchase?.purchaseToken;
 
+                    console.log('-----f---------');
+                    
                     if (receipt) {
                         console.log('결제 성공 여부 진입 ');
                         try {
                             const response:any = await validateReceiptOnServer(receipt);
                             console.log(response);
+                            
                             
                             setIsShowPayLoader(false);
                             
@@ -355,7 +360,7 @@ export const PaymentSubPort_N = (props:any) => {
                                 </PriceBox>
                                 <Space height={3}/>
                                 <PriceBox>
-                                    <PriceTxt3>포트폴리오 열람, 실시간 고수톡 서비스 혜택</PriceTxt3>
+                                    <PriceTxt3>고수의계좌 열람, 실시간 고수톡 서비스 혜택</PriceTxt3>
                                     {/* <PriceTxt3 style={isTrialAvailable&&{color:colors.orangeBorder}}>{isTrialAvailable?'첫달 무료 적용':'부가세포함'}</PriceTxt3> */}
                                     <PriceTxt3>부가세포함</PriceTxt3>
                                 </PriceBox>
@@ -403,7 +408,7 @@ export const PaymentSubPort_N = (props:any) => {
                 </PriceBox>
                 <Space height={3}/>
                 <PriceBox>
-                    <PriceTxt3>포트폴리오 열람, 실시간 고수톡 서비스 혜택</PriceTxt3>
+                    <PriceTxt3>고수의계좌 열람, 실시간 고수톡 서비스 혜택</PriceTxt3>
                     {/* <PriceTxt3 style={isTrialAvailable&&{color:colors.orangeBorder}}>{isTrialAvailable?'첫달 무료 적용':'부가세포함'}</PriceTxt3> */}
                     <PriceTxt3>부가세포함</PriceTxt3>
                 </PriceBox>

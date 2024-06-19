@@ -1,5 +1,4 @@
 import userSlice from "../slices/user";
-import { getAppAdminInfo } from "./commonData";
 import { setCurrentPage } from "./commonFunc";
 
 //헤더 백버튼 누를때
@@ -9,16 +8,6 @@ export const goBack = (navigation:any, dispatch:any)=>{
 }
 
 export async function goReportContent(navigation:any, dispatch:any, id:string, isLock:boolean){
-    // const {isShowReportPreview} = await getAppAdminInfo();
-    // if(isLock){
-    //     dispatch(userSlice.actions.setReportId(id));
-    //     setCurrentPage(dispatch, 'ReportPreview');
-    //     navigation.navigate("ReportPreview" as never);
-    // }else{
-    //     dispatch(userSlice.actions.setReportId(id));
-    //     setCurrentPage(dispatch, 'ReportContent');
-    //     navigation.navigate("ReportContent" as never);
-    // }
     dispatch(userSlice.actions.setReportId(id));
     setCurrentPage(dispatch, 'ReportPreview');
     navigation.navigate("ReportPreview" as never);
@@ -75,7 +64,6 @@ export const goPortOwner = (navigation:any, dispatch:any, pageName:string) =>{
     navigation.navigate("PortOwner" as never);
 }
 export const goPortContent = (navigation:any, dispatch:any, PortfolioId:string, pageName:string) =>{
-    console.log(PortfolioId, pageName)
     dispatch(userSlice.actions.setPageName(pageName));
     dispatch(userSlice.actions.setPortfolioId(PortfolioId));
 

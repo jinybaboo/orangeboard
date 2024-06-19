@@ -325,7 +325,7 @@ export const PortfolioIssueTalk_N = (props:any) => {
 
 
     const fetchNewData = async () => {
-        let result =  await getPortChat(pageName, bwdId,'', '10');
+        let result =  await getPortChat(pageName, bwdId,'', '100');
         const newChatData = result?.issueByDateList?.list;
         
         if(newChatData.length==0){return;}
@@ -338,7 +338,7 @@ export const PortfolioIssueTalk_N = (props:any) => {
     }
 
     const fetchOldData = async () => {
-        let result =  await getPortChat(pageName, '', fwdId, '10');
+        let result =  await getPortChat(pageName, '', fwdId, '100');
         const newChatData = result?.issueByDateList?.list;
 
         if(newChatData.length===0){

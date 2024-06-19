@@ -1,4 +1,3 @@
-import { useAppDispatch } from "../store";
 import userSlice from "../slices/user";
 import { Dimensions, Platform } from "react-native";
 import { getModel } from "react-native-device-info";
@@ -334,9 +333,9 @@ export const fileDownload = async (BASE_URL:string, filePath:string, fileName:st
         const fileUrl = BASE_URL+filePath;
         // const downloadDest = Platform.OS === 'ios' ? `${RNFS.DocumentDirectoryPath}/${fileName}` : `${RNFS.ExternalDirectoryPath}/${fileName}`
         const downloadDest = Platform.OS ==='ios'?`${DocumentDir}/${fileName}`:`${DownloadDir}/${fileName}`
-        console.log(downloadDest);
+        // console.log(downloadDest);
         const exist = await RNFS.exists(downloadDest);
-        console.log(exist);
+        // console.log(exist);
         
         if (exist) {
             await RNFS.unlink(downloadDest);
@@ -358,7 +357,6 @@ export const fileDownload = async (BASE_URL:string, filePath:string, fileName:st
         }).catch(err => {
             console.error('파일 다운로드 실패', err);
         });
-
     } catch (error) {
         
     }

@@ -17,6 +17,8 @@ pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
 pod 'Permission-PhotoLibraryAddOnly', :path => "#{permissions_path}/PhotoLibraryAddOnly"
 pod 'Permission-StoreKit', :path => "#{permissions_path}/StoreKit"
 
+pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
+
 
 
 

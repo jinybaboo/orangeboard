@@ -9,13 +9,12 @@ import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
 import Loader from "../assets/component_w/Loader";
 
-const MypageMyVaContent_W = (props:any) => {
-    const {PortAccId} = props.route.params.param;
-    
+const SearchResult_W = (props:any) => {
+    const {skeywd} = props.route.params.param;
     const [isLoading, setIsLoading] = useState(true);
     const navigation:any = useNavigation();
     const webViewRef:any = useRef(null);
-    const webviewUrl = `${BASE_URL}/mypage/myVaContent?isApp=app&PortAccId=${PortAccId}`;
+    const webviewUrl = `${BASE_URL}/search/result?isApp=app&skeywd=${skeywd}`;
 
     const handleOnMessage = async (e:any) => {
         await handleDataFromWeb(navigation, e.nativeEvent.data);
@@ -39,4 +38,4 @@ const MypageMyVaContent_W = (props:any) => {
     );
 }
 
-export default MypageMyVaContent_W;
+export default SearchResult_W;

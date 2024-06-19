@@ -17,7 +17,6 @@ import colors from "../../common/commonColors";
 import VersionCheck from "react-native-version-check";
 import { Alert, Linking, Platform } from "react-native";
 import { checkNavigator } from "../../common/navigator_w";
-import { getAppAdminInfo, validateAccessToken } from "../../common/fetchData";
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 const os = Platform.OS;
@@ -115,13 +114,10 @@ const BottomTab = () =>{
     //앱 시작시 토큰 유효성 체크 및 로그인 상태 저옵 리덕스에 넣기!!
     async function getData(){
         let pageNow:any = await EncryptedStorage.getItem('currentPage');
-        console.log(pageNow);
         
     }
     useEffect(()=>{
-        console.log('useEffect')
         getData();
-
         // loginCheck();
     });
    
@@ -162,7 +158,7 @@ const BottomTab = () =>{
 
                 <BottomTabPress onPress={()=>{}}>
                     <Btm2Img  source={pageNow=='Portfolio'?require('../../assets/icons/btm2_a.png'):require('../../assets/icons/btm2.png')}/>
-                    <BottomTabTxt style={pageNow=='Portfolio'?{color:colors.orangeBorder}:{color:'#d9d9d9'}}>포트폴리오</BottomTabTxt>
+                    <BottomTabTxt style={pageNow=='Portfolio'?{color:colors.orangeBorder}:{color:'#d9d9d9'}}>고수의계좌</BottomTabTxt>
                 </BottomTabPress>
 
                 <BottomTabPress onPress={()=>{checkNavigator(navigation, 'home' , {isReload:'n'})}}>

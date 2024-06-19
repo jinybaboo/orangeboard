@@ -16,7 +16,7 @@ import IPhoneBottom from "./common/IPhoneBottom";
 import IPhoneBottomWhite from "./common/IPhoneBottomWhite";
 import { ChannelIO } from 'react-native-channel-plugin';
 import colors from "../common/commonColors";
-import { getAppAdminInfo, validateAccessToken } from "../common/commonData";
+import { validateAccessToken } from "../common/commonData";
 import VersionCheck from "react-native-version-check";
 import { Alert, Linking, Platform } from "react-native";
 
@@ -112,33 +112,12 @@ const BottomTab = () =>{
     }
 
 
-    async function preAppVersion(){
-        let {version_android, version_ios, isShowUpdateAlarmAndroid, isShowUpdateAlarmIos} = await getAppAdminInfo();
-        setIsShowUpdateAlarm(os==='ios'?isShowUpdateAlarmIos:isShowUpdateAlarmAndroid)
-        setCurrentVersion(os==='ios'?version_ios:version_android);
 
-        const appVersion = VersionCheck.getCurrentVersion();
-
-        if(currentVersion!='notReady' && isShowUpdateAlarm && (appVersion!=currentVersion)){
-            Alert.alert( //alert 사용					
-                '안내', '오렌지보드 앱이 업데이트 되었습니다.\n버전 업데이트 후 이용해 주세요.', [ //alert창 문구 작성				
-                    {text: '확인', onPress: () => {openPlayStore()} }, 
-                ]				
-            );		
-        }
-    }
-
-
-    function openPlayStore(){
-        let url = os=='ios'?'https://apps.apple.com/kr/app/%EC%98%A4%EB%A0%8C%EC%A7%80%EB%B3%B4%EB%93%9C-%EC%A3%BC%EC%8B%9D%ED%86%B5%ED%95%A9%ED%94%8C%EB%9E%AB%ED%8F%BC/id1661760963':'market://details?id=com.orangeboard';
-        Linking.openURL(url);
-    }
 
 
     //앱 시작시 토큰 유효성 체크 및 로그인 상태 저옵 리덕스에 넣기!!
     useEffect(()=>{
         loginCheck();
-        preAppVersion();
     });
 
    
@@ -205,7 +184,7 @@ const BottomTab = () =>{
 
                 <BottomTabPress onPress={goPortfolio}>
                     <Btm2Img  source={pageNow=='Portfolio'?require('../assets/icons/btm2_a.png'):require('../assets/icons/btm2.png')}/>
-                    <BottomTabTxt style={pageNow=='Portfolio'?{color:colors.orangeBorder}:{color:'#d9d9d9'}}>포트폴리오</BottomTabTxt>
+                    <BottomTabTxt style={pageNow=='Portfolio'?{color:colors.orangeBorder}:{color:'#d9d9d9'}}></BottomTabTxt>
                 </BottomTabPress>
 
                 <BottomTabPress onPress={goHome}>

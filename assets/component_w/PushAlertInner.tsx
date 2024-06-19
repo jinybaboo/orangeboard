@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, Animated, Platform, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import {  Animated, Platform, Pressable, AppState, Alert  } from "react-native";
 import styled from "styled-components/native";
-import { getWindowHeight, getWindowWidth } from "../../common/commonFunc";
 import messaging from '@react-native-firebase/messaging';
 import { useNavigation } from "@react-navigation/native";
 import { Shadow } from 'react-native-shadow-2';
@@ -44,8 +43,8 @@ const PushAlertInner = ({animationPositionY}:any)=>{
     const navigation:any = useNavigation();
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
-    const [remoteMessage, setRemoteMessage] = useState('')
-    
+    const [remoteMessage, setRemoteMessage] = useState('');
+
     //앱이 켜져있을때 푸시알람 수신 처리
     useEffect(() => {
         const unsubscribe = messaging().onMessage(async (remoteMessage:any) => {
@@ -131,6 +130,44 @@ const PushAlertInner = ({animationPositionY}:any)=>{
             checkNavigator(navigation, 'home' , {isReload:'n'});
         }
     }
+
+
+
+
+
+    // const goHome = () =>{
+    //     checkNavigator(navigation, 'home' , {isReload:'y'})
+    // }
+    // // 백그라운드 실행중 재실행시 오류 방지용 처리 
+    // useEffect(()=>{ 
+    //     const handleAppStateChange = (nextAppState:any) => {
+    //         if (nextAppState === 'active') { // 앱이 백그라운드에서 활성 상태로 변경될 때만 처리하도록 합니다.
+    //             const currentScreenName = navigation.getCurrentRoute().name;
+    //             const params = navigation.getCurrentRoute().params;
+                
+    //             const reloadPages =['Report_W','ReportList_W','Portfolio_W','PortfolioList_W','PortrolioIssueTalkList_W','Analysis_W','AnalysisCreators_W','Mypage_W']; //주요 메인 페이지
+    //             const reloadWithParams = ['PortrolioIssueTalk_N', 'ReportPreview_W', 'ReportContent_W', 'PortfolioContent_W', 'ReportReply_W']; //푸시알람 수신 페이지
+
+    //             if(reloadPages.includes(currentScreenName)){  //주요 메인 페이지 리로드
+    //                 // navigation.navigate(currentScreenName as never);
+    //                 goHome(); 
+    //             }else if(reloadWithParams.includes(currentScreenName)){ //푸시알람 수신 페이지 리로드
+    //                 navigation.navigate(currentScreenName as never, params);
+    //             }else{
+    //                 // goHome(); //그외 페이지는 백그라운드 복귀 시 홈 화면으로 안보냄 
+    //             }
+    //         }
+    //     };
+
+    //     const listener = AppState.addEventListener('change', handleAppStateChange);
+
+    //     return () => {
+    //         listener.remove();
+    //     };
+
+    // },[]);
+
+
 
 
     return(

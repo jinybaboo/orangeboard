@@ -9,13 +9,11 @@ import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
 import Loader from "../assets/component_w/Loader";
 
-const MypageMyVaContent_W = (props:any) => {
-    const {PortAccId} = props.route.params.param;
-    
+const Farm_W = (props:any) => {
     const [isLoading, setIsLoading] = useState(true);
     const navigation:any = useNavigation();
     const webViewRef:any = useRef(null);
-    const webviewUrl = `${BASE_URL}/mypage/myVaContent?isApp=app&PortAccId=${PortAccId}`;
+    const webviewUrl = `${BASE_URL}/farm`;
 
     const handleOnMessage = async (e:any) => {
         await handleDataFromWeb(navigation, e.nativeEvent.data);
@@ -39,4 +37,4 @@ const MypageMyVaContent_W = (props:any) => {
     );
 }
 
-export default MypageMyVaContent_W;
+export default Farm_W;

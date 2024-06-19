@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { useState } from "react";
 import WebView from "react-native-webview";
 
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation} from "@react-navigation/native";
 import { useAppDispatch } from "../store";
 import { BASE_URL } from "../common/variables_w";
-import { Alert, Linking, Platform } from "react-native";
+import { Alert, DeviceEventEmitter, Linking, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { safeAreaView } from "../common/commonStyle";
 import { checkNavigator, handleDataFromWeb } from "../common/navigator_w";
@@ -16,10 +16,13 @@ import styled from "styled-components/native";
 import colors from "../common/commonColors";
 import { Space } from "../common/commonStyledComp";
 import { getWindowHeight, getWindowWidth } from "../common/commonFunc";
-import { getAppAdminInfo, getReportContent } from "../common/fetchData";
+import { getAppAdminInfo, getReportContent, insertOrUpdateFcmToken } from "../common/fetchData";
 import { checkNotifications, PERMISSIONS, RESULTS, requestNotifications, request } from 'react-native-permissions';
 import messaging from '@react-native-firebase/messaging';
 import Loader from "../assets/component_w/Loader";
+
+import EncryptedStorage from 'react-native-encrypted-storage';
+import { getModel } from "react-native-device-info";
 
 const windowWidth = getWindowWidth();
 const windowHeight = getWindowHeight();
@@ -40,8 +43,10 @@ const AlertBtnTxt = styled.Text`
     font-family: 'noto700'; font-size: 16px; line-height:19px; color:#FFF; text-align: center; line-height: 50px;
 `
 
+
 const Home_W = (props:any) => {
     const isReload = props?.route?.params?.param?.isReload;
+    
     const os = Platform.OS;
 
     const [isLoading, setIsLoading] = useState(true);
@@ -55,26 +60,54 @@ const Home_W = (props:any) => {
     const dispatch = useAppDispatch();
     const navigation:any = useNavigation();
     const webViewRef:any = useRef(null);
-    const webviewUrl = `${BASE_URL}/?isApp=app`;
+    const webviewUrl = `${BASE_URL}/index_new?isApp=app`;
 
     const isFocused = useIsFocused();
 
     async function getData(){
-        const tokens = await getTokens();
+        // await EncryptedStorage.setItem('accessToken','expired');
+        // await EncryptedStorage.setItem('refreshToken','expired');
+        const tokens:any = await getTokens();
+        
+        
         setTokens(tokens);
         setIsLoading(false);
+        
+        // 토큰 재 저장
+        const fcmToken = await messaging().getToken();
+        let deviceInfo = getModel();
+        tokens.accessToken !== 'expired' && tokens.accessToken !== null && await insertOrUpdateFcmToken(fcmToken, deviceInfo, tokens.accessToken);
     }
 
     // 페이지가 웹뷰로 전환될 때마다 자동으로 페이지를 다시로드하는 useEffect
-    useEffect(() => {
-        if(isFocused && isReload==='y'){
-            sendbTokensToWebview()
-            webViewRef.current.reload();
-        }
+    // async function checkReload(){
+    //     if(isFocused && isReload==='y'){
+    //         sendbTokensToWebview();
+    //         webViewRef.current.reload();
+    //     }
+    // }
 
+    async function reloadFromLoginAndLogout(){
+        console.log('backFromHomeReload로 인한 페이지 리로드');
+        sendbTokensToWebview();
+        webViewRef.current.reload();
+    }
+
+
+    useEffect(() => {
+        DeviceEventEmitter.addListener('backFromHomeReload', () => {
+            if(webViewRef!==null && webViewRef.current!==null){
+                reloadFromLoginAndLogout();
+            }
+        });
+    }, [webViewRef]);
+
+
+    useEffect(() => {
+        // checkReload();
         return ()=>{
             //화면 나갈때 홈화면 스크롤 탑으로 옮기고 나가기'
-            sendDataToWeb(webViewRef, 'scrollTop','')
+            //sendDataToWeb(webViewRef, 'scrollTop','')
         }
     }, [isFocused]);
 
@@ -87,10 +120,12 @@ const Home_W = (props:any) => {
 
 
     async function preAppVersion(){
-        let {version_android, version_ios, isShowUpdateAlarmAndroid, isShowUpdateAlarmIos} = await getAppAdminInfo();
-        setIsShowUpdateAlarm(os==='ios'?isShowUpdateAlarmIos:isShowUpdateAlarmAndroid)
-        setCurrentVersion(os==='ios'?version_ios:version_android);
+        let {isShowUpdateAlarmAndroid, isShowUpdateAlarmIos} = await getAppAdminInfo();
+        const storeVersion =  os === 'ios'?await VersionCheck.getLatestVersion({provider: 'appStore'}) : await VersionCheck.getLatestVersion({provider: 'playStore'});
         const appVersion = VersionCheck.getCurrentVersion();
+
+        setIsShowUpdateAlarm(os==='ios'?isShowUpdateAlarmIos:isShowUpdateAlarmAndroid);
+        setCurrentVersion(storeVersion);
         
         if(currentVersion!='notReady' && isShowUpdateAlarm && (appVersion!=currentVersion)){
             setShowUpdateModal(true);
@@ -219,8 +254,9 @@ const Home_W = (props:any) => {
                     onMessage={handleOnMessage}
                     onLoadEnd={sendbTokensToWebview}
                     textZoom={100}
+                    style={{height:windowHeight}}
+                    bounces={false} // iOS 바운스 비활성화
                 />
-
                 {showUpdateModal && 
                 <AlertView>
                     <AlertBox>

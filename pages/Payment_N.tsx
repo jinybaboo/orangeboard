@@ -230,7 +230,7 @@ export const Payment_N = () => {
 
     const checkBuyPortfolio = () =>{
         if(selectedPort==='' || !selectedPort.includes('OBP')){
-            Alert.alert('안내','구독할 포트폴리오를 선택해 주세요.');
+            Alert.alert('안내','구독할 고수의계좌를 선택해 주세요.');
             return;
         }else{
             checkNavigator(navigation, 'paymentSubscription_port' , {data:selectedPortData})
@@ -239,7 +239,7 @@ export const Payment_N = () => {
 
     const checkBuyPortfolioAll = () =>{
         if(selectedPortAll==='' || !selectedPortAll.includes('OBP')){
-            Alert.alert('안내','전체 포트폴리오를 선택해 주세요.');
+            Alert.alert('안내','전체 고수의계좌를 선택해 주세요.');
             return;
         }else{
             checkNavigator(navigation, 'paymentSubscription_port' , {data:selectedPortData})
@@ -322,10 +322,10 @@ export const Payment_N = () => {
 
             <Space height={70} />
             <PayTitleView>
-                <PayTitle>포트폴리오 정기구독</PayTitle>
+                <PayTitle>고수의계좌 정기구독</PayTitle>
                 <OrgImg source={require('../assets/icons_w/orange.png')}/>
             </PayTitleView>
-            <PayTitleTxt>포트폴리오 서비스와 고수톡 혜택을 받을 수 있는 플랜입니다.</PayTitleTxt>
+            <PayTitleTxt>고수의계좌 서비스와 고수톡 혜택을 받을 수 있는 플랜입니다.</PayTitleTxt>
 
             <Space height={16} />
             <LineEEEEEE />
@@ -341,11 +341,11 @@ export const Payment_N = () => {
             </CheckTxtView>
             <CheckTxtView>
                 <OrangeCheck source={require('../assets/icons_w/check_orange.png')} />
-                <CheckTxt>고수의 포트폴리오 공유</CheckTxt>
+                <CheckTxt>고수의 계좌 공유</CheckTxt>
             </CheckTxtView>
             <Space height={15} />
 
-             {/* 전체 포트폴리오 */}
+             {/* 전체 고수*/}
             <Free1MBox>
                 <FreeTxt1>고수의계좌 전체 구독 혜택</FreeTxt1>
                 <FreeTxt2>최초 구독시 첫달 무료로 이용 가능!</FreeTxt2>
@@ -412,7 +412,7 @@ export const Payment_N = () => {
             </BtnPressView>
 
             <Space height={60} />
-            {/* 개별 포트폴리오 */}
+            {/* 개별 고수 */}
             <RadioView>
                 {portList.map((item:any, idx:number)=>{
                     

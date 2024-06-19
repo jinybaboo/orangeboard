@@ -8,14 +8,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
 import Loader from "../assets/component_w/Loader";
+import { sendDataToWeb } from "../common/common_w";
 
-const MypageMyVaContent_W = (props:any) => {
-    const {PortAccId} = props.route.params.param;
-    
+const Search_W = (props:any) => {
     const [isLoading, setIsLoading] = useState(true);
     const navigation:any = useNavigation();
     const webViewRef:any = useRef(null);
-    const webviewUrl = `${BASE_URL}/mypage/myVaContent?isApp=app&PortAccId=${PortAccId}`;
+    const webviewUrl = `${BASE_URL}/search?isApp=app`;
 
     const handleOnMessage = async (e:any) => {
         await handleDataFromWeb(navigation, e.nativeEvent.data);
@@ -23,6 +22,10 @@ const MypageMyVaContent_W = (props:any) => {
 
     function handleLoadEnd(){
         setIsLoading(false);
+
+        setTimeout(()=>{
+            sendDataToWeb(webViewRef, 'searchInputFocus', {})
+        },800)
     }
     
     return (
@@ -39,4 +42,4 @@ const MypageMyVaContent_W = (props:any) => {
     );
 }
 
-export default MypageMyVaContent_W;
+export default Search_W;

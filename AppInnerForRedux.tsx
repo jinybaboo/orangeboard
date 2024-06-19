@@ -11,13 +11,12 @@ import userSlice from "./slices/user";
 import { setCurrentPage } from './common/commonFunc';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import BottomTab from './components/webviewComp/BottomTab';
-import { Animated, Pressable, View } from 'react-native';
+import { Animated, Platform, Pressable, View } from 'react-native';
 import PushAlertInner from './assets/component_w/PushAlertInner';
 
 
 // 페이지 이동을 위한 네이게이터 생성 및 제작
 const NativeStack = createNativeStackNavigator();
-
 
 
 function AppInnerForRedux(){
@@ -46,22 +45,15 @@ function AppInnerForRedux(){
         }
     }
 
-
     useEffect(()=>{
         //현재 페이지 정보 저장하기 
         setCurrentPage(dispatch, 'Home');
         prepare();
+
     },[]);
 
 
-
-     
-
-
-
     if(!isAppReady){return null;}
-
-
     return (
         <NavigationContainer>
             <Stack /> 
@@ -69,7 +61,6 @@ function AppInnerForRedux(){
             <PushAlertInner 
                 animationPositionY = {animationPositionY}
             />
-           
         </NavigationContainer>
     )
 }

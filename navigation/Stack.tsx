@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/reducer";
 
 import { useAppDispatch } from "../store";
-import { setCurrentPage, setCurrentPageForAndroidBackBtn } from "../common/commonFunc";
 
 
 
@@ -69,49 +68,44 @@ import IntroReport_W from "../pages/IntroReport_W";
 import IntroGosu_W from "../pages/IntroGosu_W";
 import IntroAnalysis_W from "../pages/IntroAnalysis_W";
 import { checkNavigator } from "../common/navigator_w";
+import styled from "styled-components/native";
+import colors from "../common/commonColors";
+import Farm_W from "../pages/Farm_W";
+import FarmOwner_W from "../pages/FarmOwner_W";
+import Search_W from "../pages/Search_W";
+import SearchResult_W from "../pages/SearchResult_W";
 
 
 // 페이지 이동을 위한 네이게이터 생성 및 제작
 const NativeStack = createNativeStackNavigator();
 
+const PortPress = styled.Pressable`
+    width: 60px; height: 30px; align-items: center; justify-content: center; border-width:1px; border-radius: 8px; border-color: ${colors.orangeBorder};
+`
+const HeaderTxt = styled.Text`
+     font-family: 'noto500'; font-size: 12px; line-height:15px; color: ${colors.orangeBorder}; padding-top: 2px;
+`
 
 
 //네비게이터 스크린의 네임을, 향후 props에서 navigate 함수를 이용하여 페이지 이동시에 사용한다!!!!!
 const Stack = () =>{
     const navigation:any = useNavigation();
 
-    //리듀서 사용 세팅
-    const dispatch = useAppDispatch();
-    const pageStack = useSelector((state:RootState)=>state.user.pageStack);
-
-    const companyInfoCompanyName = useSelector((state:RootState)=>state.user.companyInfoCompanyName);
-    const seriesName = useSelector((state:RootState)=>state.user.seriesName);
-
-    
-
     useEffect(()=>{
         const androidBackAction = () =>{
             backAction();
             return true;
         }
-
         //안드로이드 백버튼 누를때 처리
         const backHandler = BackHandler.addEventListener('hardwareBackPress', androidBackAction);
         return () => {backHandler.remove();}
-
-    }) //모든 동작에 반응하도록 [] 안넣어줌!
-
+    });
 
     
-    //헤더 백버튼 누를때
     const backAction = ()=>{
         if(navigation.canGoBack()){
-            const currentPage = navigation.getCurrentRoute().name;
-            if(currentPage==='PortrolioIssueTalk_N'){
-                checkNavigator(navigation, 'portfolioIssueTalkList', {})
-            }else{
-                navigation.goBack();
-            }
+            navigation.goBack();
+
         }else{
             Alert.alert("종료", "앱을 종료 하시겠습니까?", [
                 {
@@ -122,6 +116,10 @@ const Stack = () =>{
                 { text: "확인", onPress: () => BackHandler.exitApp() }
             ]);
         }
+    }
+
+    function goPortDirect(pageName:string){
+        checkNavigator(navigation, 'portfolioOwner' , {pageName})
     }
 
 
@@ -144,7 +142,21 @@ const Stack = () =>{
                     <Pressable onPress={backAction} style={{width:50, height:40}}>
                         <Image source={require('../assets/icons_w/backArrow.png')} style={{width:16,height:20,marginTop:10}}/>
                     </Pressable>
-                )
+                ),
+
+                headerRight:()=>{
+                    const naviData = navigation.getCurrentRoute()
+
+                    if(naviData?.name === 'PortrolioIssueTalk_N'){
+                        return(
+                            <PortPress onPress={()=>{goPortDirect(naviData?.params?.param?.pageName)}}>
+                                <HeaderTxt>계좌보기</HeaderTxt>
+                            </PortPress>
+                        )
+                    }else{
+                        return <></>
+                    }
+                }
             }}
         >
         {/* 웹뷰 파트  */}
@@ -240,7 +252,7 @@ const Stack = () =>{
             }}
         />
 
-        {/* 포트폴리오 */}
+        {/* 고수의계좌 */}
         <NativeStack.Screen 
             name="Portfolio_W"
             component={Portfolio_W}
@@ -538,7 +550,7 @@ const Stack = () =>{
             component={PaymentSubPort_N}
             options={{
                 headerShown:true,
-                headerTitle:'포트폴리오 구독',
+                headerTitle:'고수의계좌 구독',
                 animation:"slide_from_right",
             }}
         />
@@ -617,7 +629,38 @@ const Stack = () =>{
                 animation:"slide_from_right",
             }}
         />
-
+        <NativeStack.Screen 
+            name="Farm_W"
+            component={Farm_W}
+            options={{
+                headerShown:false,
+                animation:"slide_from_right",
+            }}
+        />
+        <NativeStack.Screen 
+            name="FarmOwner_W"
+            component={FarmOwner_W}
+            options={{
+                headerShown:false,
+                animation:"slide_from_right",
+            }}
+        />
+        <NativeStack.Screen 
+            name="Search_W"
+            component={Search_W}
+            options={{
+                headerShown:false,
+                animation:"slide_from_right",
+            }}
+        />
+        <NativeStack.Screen 
+            name="SearchResult_W"
+            component={SearchResult_W}
+            options={{
+                headerShown:false,
+                animation:"slide_from_right",
+            }}
+        />
     </NativeStack.Navigator>
         
         

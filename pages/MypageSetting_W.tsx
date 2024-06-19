@@ -6,6 +6,7 @@ import { BASE_URL } from "../common/variables_w";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
+import { DeviceEventEmitter } from "react-native";
 
 
 
@@ -19,6 +20,12 @@ const MypageSetting_W = (props:any) => {
         const {type, value} = JSON.parse(e.nativeEvent.data);
         await handleDataFromWeb(navigation, e.nativeEvent.data);
     };
+
+    useEffect(() => {
+        return () => {
+            DeviceEventEmitter.emit('backFromHomeReload');
+        }
+    }, []);
 
     return (
         <SafeAreaView style={safeAreaView}>

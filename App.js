@@ -4,7 +4,7 @@ import store from './store';
 import AppInnerForRedux from './AppInnerForRedux';
 import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
-import { Text, TextInput } from 'react-native';
+import { Text, TextInput} from 'react-native';
 
 
 // 안드로이드 Text 확대 방지 적용
@@ -16,11 +16,10 @@ TextInput.defaultProps.allowFontScaling = false;
 
 export default function App() {
 
-
-  return (
-    <Provider store={store}>
-      <StatusBar style='dark' />
-      <AppInnerForRedux />
-    </Provider>
-  );
+    return (
+        <Provider store={store}>
+        <StatusBar style='dark' />
+        <AppInnerForRedux />
+        </Provider>
+    );
 }

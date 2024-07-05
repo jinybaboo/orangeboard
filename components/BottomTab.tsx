@@ -113,8 +113,6 @@ const BottomTab = () =>{
 
 
 
-
-
     //앱 시작시 토큰 유효성 체크 및 로그인 상태 저옵 리덕스에 넣기!!
     useEffect(()=>{
         loginCheck();

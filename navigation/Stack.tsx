@@ -74,6 +74,7 @@ import Farm_W from "../pages/Farm_W";
 import FarmOwner_W from "../pages/FarmOwner_W";
 import Search_W from "../pages/Search_W";
 import SearchResult_W from "../pages/SearchResult_W";
+import Hamburger_W from "../pages/Hamburger_W";
 
 
 // 페이지 이동을 위한 네이게이터 생성 및 제작
@@ -659,6 +660,14 @@ const Stack = () =>{
             options={{
                 headerShown:false,
                 animation:"slide_from_right",
+            }}
+        />
+        <NativeStack.Screen 
+            name="Hamburger_W"
+            component={Hamburger_W}
+            options={{
+                headerShown:false,
+                animation:"slide_from_left",
             }}
         />
     </NativeStack.Navigator>

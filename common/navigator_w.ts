@@ -9,7 +9,6 @@ import RNFS from 'react-native-fs';
 export async function handleDataFromWeb(navigation:any, data:any){
     const {type, value, param} = JSON.parse(data);
 
-    
    
     if(type==='navi'){
         checkNavigator(navigation, value, param);
@@ -187,6 +186,8 @@ export async function checkNavigator(navigation:any, value:string, param:any){
         navigation.navigate("Farm_W" as never, {param:param});
     }else if(value==='farmOwner'){
         navigation.navigate("FarmOwner_W" as never, {param:param});
+    }else if(value==='farmVisitReply'){
+        navigation.navigate("ReportReply_W" as never, {param:param});
     }
 
 
@@ -219,5 +220,7 @@ export async function checkNavigator(navigation:any, value:string, param:any){
         navigation.navigate("IntroGosu_W" as never, {param:param});
     }else if(value==='etcIntroAnalysis'){
         navigation.navigate("IntroAnalysis_W" as never, {param:param});
+    }else if(value==='etcHamburger'){
+        navigation.navigate("Hamburger_W" as never, {param:param});
     }
 }

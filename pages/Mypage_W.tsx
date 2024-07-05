@@ -11,6 +11,7 @@ import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
 import { getMyProfile } from "../common/fetchData";
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { DeviceEventEmitter } from "react-native";
 
 
 const Mypage_W = (props:any) => {
@@ -43,7 +44,15 @@ const Mypage_W = (props:any) => {
         return ()=>{
             ChannelIO.hideChannelButton();
         }
-    },[])
+    },[]);
+
+
+    // 이 페이지에서 홈화면 돌아가면 홈화면 데이터 및 피드 리프레시 되도록 설정
+    useEffect(() => {
+        return () => {
+            DeviceEventEmitter.emit('backFromHomeReload');
+        }
+    }, []);
 
 
     if(isLoading){
@@ -55,11 +64,11 @@ const Mypage_W = (props:any) => {
 
     let settings = {
         "pluginKey": 'bfe4381c-686e-4dab-b7a0-897bea321178',
-        "memberId" : profile.uuid,
+        "memberId" : profile?.uuid,
         "profile": {
-            "name": profile.Profile.displayName,
-            "email": profile.email,
-            "avatarUrl": profile.Profile.avatar.url,
+            "name": profile?.Profile?.displayName,
+            "email": profile?.email,
+            "avatarUrl": profile?.Profile?.avatar?.url,
         },
         "channelButtonOption": {
         "xMargin": 20,

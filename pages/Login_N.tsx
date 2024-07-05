@@ -5,7 +5,7 @@ import { Alert, Animated, DeviceEventEmitter, Platform, Pressable, TouchableOpac
 import { checkNavigator} from "../common/navigator_w";
 
 import {login,loginWithKakaoAccount,logout,getProfile as getKakaoProfile,unlink,} from "@react-native-seoul/kakao-login";
-import { getWebTokenWithAppleToken, getWebTokenWithGoogleToken, getWebTokenWithKakao, getWebTokenWithNaverToken, insertAgreementAndPrivacy, insertOrUpdateFcmToken } from "../common/fetchData";
+import { getCorpLoginToken, getWebTokenWithAppleToken, getWebTokenWithGoogleToken, getWebTokenWithKakao, getWebTokenWithNaverToken, insertAgreementAndPrivacy, insertOrUpdateFcmToken } from "../common/fetchData";
 import EncryptedStorage from 'react-native-encrypted-storage';
 import NaverLogin, {NaverLoginResponse, GetProfileResponse} from '@react-native-seoul/naver-login';
 import auth from '@react-native-firebase/auth';
@@ -16,7 +16,7 @@ import { v4 as uuid } from 'uuid';
 import { getWindowWidth } from "../common/commonFunc";
 import styled from "styled-components/native";
 import { StatusBar } from "expo-status-bar";
-import { LineE2E2E2 } from "../common/commonStyledComp";
+import { LineE2E2E2, Space12 } from "../common/commonStyledComp";
 import colors from "../common/commonColors";
 import messaging from '@react-native-firebase/messaging';
 import { getModel } from "react-native-device-info";
@@ -33,9 +33,31 @@ const LoginView = styled.View`
 const Space = styled.View``
 
 
+// 기업 로그인
+const CorpLoginView = styled.View`
+    width: 100%; padding: 0 17px;
+`
+const TypeView = styled.View`
+    width: 100%; height:100px; align-items: center; flex-direction: row; justify-content: center; 
+`
+const TypePress = styled.Pressable`
+    border-bottom-color:#FFF; border-bottom-width: 3px; margin: 0 12px; 
+`
+const TypeTxt = styled.Text`
+    font-family: "noto500"; font-size: 24px; line-height: 37px; color: #999; 
+`
+const CorpLoginInputBox = styled.View`
+    width: 100%; height: 46px; 
+`
+const CorpLoginInput = styled.TextInput`
+    font-size: 14px; line-height:17px; width:100%; height:46px; border-width: 1px; border-color: #DDD; border-radius: 12px; padding: 0 20px;
+    color:#333;
+`
+
+
 ///// 신규 로그인 디자인
 const LoginText = styled.Text`
-    font-family: "noto400"; font-size: 14px; line-height: 20px; color: #000000; text-align: center; margin-top: 96px;
+    font-family: "noto400"; font-size: 14px; line-height: 20px; color: #000000; text-align: center; margin-top: 30px;
 `;
 
 const LogoImg = styled.Image`
@@ -48,6 +70,9 @@ const LogoBtnBoxView = styled.View`
 const LogoBtnBox = styled.View`
   width:${windowWidth - 32}px; height:46px; background-color:#FEE500; margin-top:12px; border-radius:12px; justify-content:center; align-items:center;
   flex-direction: row;
+`
+const CorpLoginBtn = styled(LogoBtnBox)`
+    background-color: #FF7900;
 `
 const SnsLogoImg = styled.Image`
   width:18.33px; height:18px;
@@ -124,8 +149,18 @@ const Login_N = (props:any) => {
     const [check5, setCheck5] = useState(false);
     const [isSendBtnDisabled, setIsSendBtnDisabled] = useState(false);
 
+    //기업 로그인
+    const [loginType, setLoginType] = useState<any>('개인');
+    const [saveId, setSaveId] = useState<any>(false);
+    const [id, setId] = useState<any>('');
+    const [password, setPassword] = useState<any>('');
+    const [err, setErr] = useState<any>('');
+
     const navigation:any = useNavigation();
     const animationPositionY = useRef(new Animated.Value(0)).current;
+
+    const corpIdRef:any = useRef(null);
+    const corpPassRef:any = useRef(null);
 
     useEffect(()=>{
         Animated.timing(animationPositionY, {
@@ -397,11 +432,56 @@ const Login_N = (props:any) => {
     }
 
 
+    // 이 페이지에서 홈화면 돌아가면 홈화면 데이터 및 피드 리프레시 되도록 설정
     useEffect(() => {
         return () => {
             DeviceEventEmitter.emit('backFromHomeReload');
         }
     }, []);
+
+
+
+    useEffect(()=>{
+        async function getSavedCorpId(){
+            const corpId = await EncryptedStorage.getItem('corpId');
+            if(corpId){
+                setSaveId(true);
+                setId(corpId)
+            }
+        }
+        getSavedCorpId();
+    },[]);
+
+    async function corpLoginCheck(){
+        if(id.length===0){
+            Alert.alert('안내', '아이디를 입력해 주세요.');
+            corpIdRef.current.focus()
+            return;
+        }
+        
+        if(password.length===0){
+            Alert.alert('안내', '비밀번호를 입력해 주세요.');
+            corpPassRef.current.focus()
+            return;
+        }
+
+        const {accessToken, refreshToken}:any = await getCorpLoginToken({
+            "OAuthId": id,
+            "password": password,
+        });
+
+
+        if(accessToken){   
+            if(saveId){
+                EncryptedStorage.setItem('corpId', id);
+            }else{
+                EncryptedStorage.removeItem('corpId');
+            }
+            processLogin(accessToken, refreshToken, '200');
+        }else{
+            Alert.alert('안내', '아이디또는 비밀번호를 잘못입력했습니다.\n입력하신 내용을 다시 확인해주세요.'); 
+        }
+    }
 
 
     return (
@@ -412,57 +492,118 @@ const Login_N = (props:any) => {
             <LoginText>주식투자의 새로운 기준</LoginText>
             <LogoImg source={require('../assets/icons_w/orangeLogoLogin.png')} />
 
-
             
+            <TypeView>
+                <TypePress 
+                    style={loginType==='개인'&&{borderBottomColor:'#FF7900'}}
+                    onPress={()=>{setLoginType('개인')}}
+                >
+                    <TypeTxt style={loginType==='개인'&&{color:'#333', fontFamily:'noto700'}}>개인회원</TypeTxt>
+                </TypePress>
+                <TypePress 
+                    style={loginType==='기업'&&{borderBottomColor:'#FF7900'}}
+                    onPress={()=>{setLoginType('기업')}}
+                >
+                    <TypeTxt style={loginType==='기업'&&{color:'#333', fontFamily:'noto700'}}>기업회원</TypeTxt>
+                </TypePress>
+            </TypeView>
+
+
+            {loginType==='개인'?
             <LogoBtnBoxView>
                 <TempTextPress>
-                <Pressable onPress={()=>{checkNavigator(navigation, 'authPolicy', {type:'agreement'})}}><TempTxt>로그인을 누르는 것으로 계정 연동에 대한 <TempTxtLine>이용약관</TempTxtLine>과</TempTxt></Pressable>
-                <Pressable onPress={()=>{checkNavigator(navigation, 'authPolicy', {type:'privacy'});}}><TempTxt><TempTxtLine>개인정보 처리방침</TempTxtLine>에 동의하고 서비스를 이용합니다. </TempTxt></Pressable>
+                    <Pressable onPress={()=>{checkNavigator(navigation, 'authPolicy', {type:'agreement'})}}><TempTxt>로그인을 누르는 것으로 계정 연동에 대한 <TempTxtLine>이용약관</TempTxtLine>과</TempTxt></Pressable>
+                    <Pressable onPress={()=>{checkNavigator(navigation, 'authPolicy', {type:'privacy'});}}><TempTxt><TempTxtLine>개인정보 처리방침</TempTxtLine>에 동의하고 서비스를 이용합니다. </TempTxt></Pressable>
                 </TempTextPress>
 
                 <TouchableOpacity onPress={onGoogleButtonPress}>
-                <LogoBtnBox style={{backgroundColor:'#FFFFFF', borderColor:'#E2E2E2', borderWidth:1}}>
-                    <SnsLogoImg source={require('../assets/icons_w/google.png')}/>
-                    <SnsLoginTxt>Google 계정으로 시작하기</SnsLoginTxt>
-                </LogoBtnBox>
+                    <LogoBtnBox style={{backgroundColor:'#FFFFFF', borderColor:'#E2E2E2', borderWidth:1}}>
+                        <SnsLogoImg source={require('../assets/icons_w/google.png')}/>
+                        <SnsLoginTxt>Google 계정으로 시작하기</SnsLoginTxt>
+                    </LogoBtnBox>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={signInWithKakao}>
-                <LogoBtnBox>
-                    <SnsLogoImg source={require('../assets/icons_w/kakao.png')}/>
-                    <SnsLoginTxt>카카오톡으로 시작하기</SnsLoginTxt>
-                </LogoBtnBox>
+                    <LogoBtnBox>
+                        <SnsLogoImg source={require('../assets/icons_w/kakao.png')}/>
+                        <SnsLoginTxt>카카오톡으로 시작하기</SnsLoginTxt>
+                    </LogoBtnBox>
                 </TouchableOpacity>
                 
                 <TouchableOpacity onPress = {signInWithNaver} >
-                <LogoBtnBox style={{backgroundColor:'#2DB400'}}>
-                    <SnsLogoImg source={require('../assets/icons_w/naver.png')} style={{width:18}}/>
-                    <SnsLoginTxt style={{color:'#FFFFFF'}}>네이버로 시작하기</SnsLoginTxt>
-                </LogoBtnBox>
+                    <LogoBtnBox style={{backgroundColor:'#2DB400'}}>
+                        <SnsLogoImg source={require('../assets/icons_w/naver.png')} style={{width:18}}/>
+                        <SnsLoginTxt style={{color:'#FFFFFF'}}>네이버로 시작하기</SnsLoginTxt>
+                    </LogoBtnBox>
                 </TouchableOpacity>
                 
                 {os=='ios'?
                 <TouchableOpacity onPress={onAppleButtonPress} >
-                <LogoBtnBox style={{backgroundColor:'#000000'}}>
-                    <SnsLogoImg source={require('../assets/icons_w/apple.png')} style={{width:18}}/>
-                    <SnsLoginTxt style={{color:'#FFFFFF'}}>Apple로 시작하기</SnsLoginTxt>
-                </LogoBtnBox>
+                    <LogoBtnBox style={{backgroundColor:'#000000'}}>
+                        <SnsLogoImg source={require('../assets/icons_w/apple.png')} style={{width:18}}/>
+                        <SnsLoginTxt style={{color:'#FFFFFF'}}>Apple로 시작하기</SnsLoginTxt>
+                    </LogoBtnBox>
                 </TouchableOpacity>
                 :
                 <TouchableOpacity onPress={onAppleButtonPressAtAndroid} >
-                <LogoBtnBox style={{backgroundColor:'#000000'}}>
-                    <SnsLogoImg source={require('../assets/icons_w/apple.png')} style={{width:18}}/>
-                    <SnsLoginTxt style={{color:'#FFFFFF'}}>Apple로 시작하기</SnsLoginTxt>
-                </LogoBtnBox>
+                    <LogoBtnBox style={{backgroundColor:'#000000'}}>
+                        <SnsLogoImg source={require('../assets/icons_w/apple.png')} style={{width:18}}/>
+                        <SnsLoginTxt style={{color:'#FFFFFF'}}>Apple로 시작하기</SnsLoginTxt>
+                    </LogoBtnBox>
                 </TouchableOpacity>
                 }
-
             </LogoBtnBoxView>
+            :
+            <CorpLoginView>
+
+                <Pressable onPress={()=>{setSaveId(!saveId)}}> 
+                    <CheckBoxView>
+                        <CheckBoxImg source={saveId?require('../assets/icons_w/orderChkActive.png'):require('../assets/icons_w/orderChk.png')} /> 
+                    <CheckBoxTxt>아이디 저장</CheckBoxTxt>
+                    </CheckBoxView>
+                </Pressable>
+                <Space12 />
+
+
+                <CorpLoginInputBox>
+                    <CorpLoginInput 
+                        ref = {corpIdRef}
+                        placeholder="기업회원 아이디"
+                        autoFocus={true}  
+                        autoCapitalize="none"
+                        onChangeText={(txt)=>{setId(txt)}}
+                        value= {id}
+                        onSubmitEditing = {()=>{corpPassRef.current.focus()}}
+                    />
+                </CorpLoginInputBox>
+                
+                <Space12 />
+                
+                <CorpLoginInputBox>
+                    <CorpLoginInput 
+                        ref = {corpPassRef}
+                        placeholder="비밀번호"
+                        secureTextEntry = {true}
+                        autoCapitalize="none"
+                        onChangeText={(txt)=>{setPassword(txt)}}
+                        onSubmitEditing = {corpLoginCheck}
+                        returnKeyType='done'
+                    />
+                </CorpLoginInputBox>
+
+                <TouchableOpacity onPress={corpLoginCheck}>
+                    <CorpLoginBtn>
+                        <SnsLoginTxt style={{color:'#FFF', fontSize:15}}>로그인</SnsLoginTxt>
+                    </CorpLoginBtn>
+                </TouchableOpacity>
+            </CorpLoginView>
+            }
+
                 
             {isAgreeViewShow&&
             <BlackOpacityView>
                 <AgreementViewAnimated
-                style={[{ transform: [{ translateY: animationPositionY }] }]}
+                    style={[{ transform: [{ translateY: animationPositionY }] }]}
                 >
                 <AgreementTxt1>약관에 동의해주세요</AgreementTxt1>
                 <AgreementTxt2>여러분의 개인정보와 서비스 이용 권리{`\n`}잘 지켜드릴게요</AgreementTxt2>

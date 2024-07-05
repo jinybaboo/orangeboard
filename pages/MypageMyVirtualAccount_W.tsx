@@ -35,6 +35,7 @@ const MypageMyVirtualAccount_W = (props:any) => {
                 onMessage={handleOnMessage}
                 onLoadEnd={handleLoadEnd}
                 textZoom={100}
+                bounces={false} //바운스 비활성화
             />
             {isLoading && <Loader />}
         </SafeAreaView>

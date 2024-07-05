@@ -2,6 +2,20 @@ import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { DATA_FETCH_URL } from './variables_w';
 
+
+export const getCorpLoginToken = async (data:any) =>{
+    try {
+        const response:any = await axios.post(`${DATA_FETCH_URL}/v2/auth/login`, data, { withCredentials: true });
+        const refreshToken:string = response.headers["set-cookie"][0].split(';')[0].replace('8r2b0o1=','');
+        const accessToken:string = response.headers.authorization;
+        return {accessToken, refreshToken};
+    } catch (error:any) {
+        console.error('getCorpLoginToken ',error);
+        return {accessToken:false, refreshToken:false};
+    }
+}
+
+
 export async function getAppAdminInfo(){
     try {
         const {data} = await axios.get(`https://manage.orangeboard.co.kr/v1/managements/app-info`);
@@ -282,11 +296,14 @@ export async function validateAccessToken(){
     //액세스토큰의 유효성을 검증하고여 액세스토큰을 리턴하고, 엑세스 및 리프레시 토큰이 기간이 만료되면 expired를 리턴함!
     try { //액세스토큰으로 유저 정보를 가져온다. 이때 성공하면, 엑세스 토큰이 유효하므로 액세스 토큰 그대로 리턴한다.
         const res = await axios.get(`${DATA_FETCH_URL}/v1/profile`, {headers:{'Authorization' : accessToken}});
+        console.log('엑세스토큰 유효함');
+        
         return accessToken;
     } catch (error:any) { //유저정보를 가져오는데 실패하면 엑세스 토큰이 유효하지 않으므로 리프레시 토큰으로 신규 엑세스 토큰을 발급하여 리턴한다.
         //console.log('액세스 토큰 유효하지 않음')
         const newAccessToken = await getAccessTokenWithRefreshToken(); //여기서 리프레시 토큰이 무효하면 expired 토큰이 리턴된다.
         await EncryptedStorage.setItem('accessToken',newAccessToken); //신규 액세스 토큰 앱에 저장
+        console.log('엑세스토큰 무효, 재저장 함');
         return newAccessToken;
     }
 }

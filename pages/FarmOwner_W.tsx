@@ -1,4 +1,4 @@
-import React, {useRef, useState } from "react";
+import React, {useEffect, useRef, useState } from "react";
 
 import WebView from "react-native-webview";
 
@@ -8,6 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
 import Loader from "../assets/component_w/Loader";
+import { DeviceEventEmitter } from "react-native";
 
 const FarmOwner_W = (props:any) => {
     const {pageName} = props.route.params.param;
@@ -24,6 +25,13 @@ const FarmOwner_W = (props:any) => {
     function handleLoadEnd(){
         setIsLoading(false);
     }
+
+    // 이 페이지에서 홈화면 돌아가면 홈화면 데이터 및 피드 리프레시 되도록 설정
+    useEffect(() => {
+        return () => {
+            DeviceEventEmitter.emit('backFromHomeReload');
+        }
+    }, []);
     
     return (
             <SafeAreaView style={safeAreaView}>

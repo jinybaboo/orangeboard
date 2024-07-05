@@ -1,6 +1,6 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Linking, Platform, Text, View, findNodeHandle, Share, DeviceEventEmitter, Keyboard, ActivityIndicator } from "react-native";
+import { Alert, Linking, Platform, Text, View, findNodeHandle, Share, DeviceEventEmitter, Keyboard, ActivityIndicator, Pressable } from "react-native";
 import styled from "styled-components/native";
 import colors from "../common/commonColors";
 import { changeChatDate, convertToAMPM, fileDown, getIphoneBottomInfo, getWindowWidth} from "../common/commonFunc";
@@ -627,6 +627,10 @@ export const PortfolioIssueTalk_N = (props:any) => {
         }
     }
 
+    function goFarmOwner(){
+        checkNavigator(navigation, 'farmOwner' , {pageName})
+    }
+
     return (
         <BasicView>
             <ChatScrollView 
@@ -676,7 +680,9 @@ export const PortfolioIssueTalk_N = (props:any) => {
                                 return (
                                     <View key={idx+'_'+idx2+'_chat'}>
                                         <ChatOuterBox>
-                                            <PortLogo source={{uri:channelInfo?.avatarUrl}} />
+                                            <Pressable onPress={goFarmOwner}>
+                                                <PortLogo source={{uri:channelInfo?.avatarUrl}} />
+                                            </Pressable>
                                             <ChatInnerBox>
                                                 {isReply &&
                                                 <>

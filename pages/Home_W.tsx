@@ -16,7 +16,7 @@ import styled from "styled-components/native";
 import colors from "../common/commonColors";
 import { Space } from "../common/commonStyledComp";
 import { getWindowHeight, getWindowWidth } from "../common/commonFunc";
-import { getAppAdminInfo, getReportContent, insertOrUpdateFcmToken } from "../common/fetchData";
+import { getAppAdminInfo, getReportContent, insertOrUpdateFcmToken, validateAccessToken } from "../common/fetchData";
 import { checkNotifications, PERMISSIONS, RESULTS, requestNotifications, request } from 'react-native-permissions';
 import messaging from '@react-native-firebase/messaging';
 import Loader from "../assets/component_w/Loader";
@@ -46,7 +46,6 @@ const AlertBtnTxt = styled.Text`
 
 const Home_W = (props:any) => {
     const isReload = props?.route?.params?.param?.isReload;
-    
     const os = Platform.OS;
 
     const [isLoading, setIsLoading] = useState(true);
@@ -60,15 +59,14 @@ const Home_W = (props:any) => {
     const dispatch = useAppDispatch();
     const navigation:any = useNavigation();
     const webViewRef:any = useRef(null);
-    const webviewUrl = `${BASE_URL}/index_new?isApp=app`;
+    const webviewUrl = `${BASE_URL}?isApp=app`;
+
 
     const isFocused = useIsFocused();
 
     async function getData(){
-        // await EncryptedStorage.setItem('accessToken','expired');
-        // await EncryptedStorage.setItem('refreshToken','expired');
+        EncryptedStorage.setItem('refreshToken','expired');
         const tokens:any = await getTokens();
-        
         
         setTokens(tokens);
         setIsLoading(false);
@@ -80,15 +78,15 @@ const Home_W = (props:any) => {
     }
 
     // 페이지가 웹뷰로 전환될 때마다 자동으로 페이지를 다시로드하는 useEffect
-    // async function checkReload(){
-    //     if(isFocused && isReload==='y'){
-    //         sendbTokensToWebview();
-    //         webViewRef.current.reload();
-    //     }
-    // }
+    async function checkReload(){
+        if(isFocused && isReload==='y'){
+            sendbTokensToWebview();
+            webViewRef.current.reload();
+        }
+    }
 
     async function reloadFromLoginAndLogout(){
-        console.log('backFromHomeReload로 인한 페이지 리로드');
+        // console.log('backFromHomeReload로 인한 페이지 리로드');
         sendbTokensToWebview();
         webViewRef.current.reload();
     }
@@ -194,9 +192,19 @@ const Home_W = (props:any) => {
    
 
 
+
+    const goLogin = () =>{
+        checkNavigator(navigation, 'login', {})
+    }
+
+
     async function goToPageByPush(remoteMessage:any){
+        const accessToken:any = await validateAccessToken();
+        if(accessToken==='expired'|| accessToken==null || accessToken==undefined){
+            goLogin();
+        }
+
         const {type, ReportId, CommentId, pageName, PortfolioId} = remoteMessage?.data;
-        // console.log('remoteMessage?.data', remoteMessage?.data);
 
         if (type=='portfolio-issue'){
             checkNavigator(navigation, 'home' , {isReload:'n'})
@@ -235,6 +243,11 @@ const Home_W = (props:any) => {
             setTimeout(()=>{
                 navigation.navigate("ReportReply_W" as never, {param:{ReportId:PortfolioId, title:pageName, from:'portfolio'}});
             },500)
+        }else if(type=='portfolio-realtime'){
+            checkNavigator(navigation, 'home' , {isReload:'n'});
+            setTimeout(()=>{
+                navigation.navigate("PortfolioOwner_W" as never, {param:{pageName}});
+            },500)
         }else{
             checkNavigator(navigation, 'home' , {isReload:'n'})
         }
@@ -255,7 +268,7 @@ const Home_W = (props:any) => {
                     onLoadEnd={sendbTokensToWebview}
                     textZoom={100}
                     style={{height:windowHeight}}
-                    bounces={false} // iOS 바운스 비활성화
+                    bounces={false} //바운스 비활성화
                 />
                 {showUpdateModal && 
                 <AlertView>

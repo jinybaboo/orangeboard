@@ -141,13 +141,8 @@ export const PaymentSubPort_N = (props:any) => {
     }
 
     useEffect(()=>{
-
-        
         getData();
-        
     },[]);
-
-    
     
     useEffect(()=>{
         initIAP(); //초기화

@@ -9,6 +9,7 @@ import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
 import Loader from "../assets/component_w/Loader";
 import { sendDataToWeb } from "../common/common_w";
+import { DeviceEventEmitter } from "react-native";
 
 const Portfolio_W = (props:any) => {
     const [isLoading, setIsLoading] = useState(true);
@@ -29,6 +30,14 @@ const Portfolio_W = (props:any) => {
     useEffect(()=>{
         sendDataToWeb(webViewRef, 'reload','');
     },[isFocused])
+
+
+    // 이 페이지에서 홈화면 돌아가면 홈화면 데이터 및 피드 리프레시 되도록 설정
+    useEffect(() => {
+        return () => {
+            DeviceEventEmitter.emit('backFromHomeReload');
+        }
+    }, []);
     
     return (
             <SafeAreaView style={safeAreaView}>

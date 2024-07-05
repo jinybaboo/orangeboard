@@ -1,17 +1,13 @@
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { RootState } from './store/reducer';
-import { useSelector } from 'react-redux';
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import * as Font from 'expo-font';
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Stack from './navigation/Stack';
 import { useAppDispatch } from "./store";
-import userSlice from "./slices/user";
 import { setCurrentPage } from './common/commonFunc';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import BottomTab from './components/webviewComp/BottomTab';
-import { Animated, Platform, Pressable, View } from 'react-native';
+import { Animated} from 'react-native';
 import PushAlertInner from './assets/component_w/PushAlertInner';
 
 

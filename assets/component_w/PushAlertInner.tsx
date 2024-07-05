@@ -5,7 +5,8 @@ import messaging from '@react-native-firebase/messaging';
 import { useNavigation } from "@react-navigation/native";
 import { Shadow } from 'react-native-shadow-2';
 import { checkNavigator } from "../../common/navigator_w";
-import { getReportContent } from "../../common/fetchData";
+import { getReportContent, validateAccessToken } from "../../common/fetchData";
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const os = Platform.OS;
 
@@ -83,7 +84,6 @@ const PushAlertInner = ({animationPositionY}:any)=>{
 
     async function goToPageByPush(remoteMessage:any){
         const {type, ReportId, CommentId, pageName, PortfolioId} = remoteMessage?.data;
-
         if(type==undefined){
             return null;
         }
@@ -126,18 +126,26 @@ const PushAlertInner = ({animationPositionY}:any)=>{
             setTimeout(()=>{
                 navigation.navigate("ReportReply_W" as never, {param:{ReportId:PortfolioId, title:pageName, from:'portfolio'}});
             },500)
+        }else if(type=='portfolio-realtime'){
+            checkNavigator(navigation, 'home' , {isReload:'n'});
+            setTimeout(()=>{
+                navigation.navigate("PortfolioOwner_W" as never, {param:{pageName}});
+            },500)
         }else{
             checkNavigator(navigation, 'home' , {isReload:'n'});
         }
     }
 
 
+    const goHome = () =>{
+        checkNavigator(navigation, 'home' , {isReload:'y'})
+    }
+
+    const goLogin = () =>{
+        checkNavigator(navigation, 'login', {})
+    }
 
 
-
-    // const goHome = () =>{
-    //     checkNavigator(navigation, 'home' , {isReload:'y'})
-    // }
     // // 백그라운드 실행중 재실행시 오류 방지용 처리 
     // useEffect(()=>{ 
     //     const handleAppStateChange = (nextAppState:any) => {
@@ -158,16 +166,27 @@ const PushAlertInner = ({animationPositionY}:any)=>{
     //             }
     //         }
     //     };
-
     //     const listener = AppState.addEventListener('change', handleAppStateChange);
-
     //     return () => {
     //         listener.remove();
     //     };
-
     // },[]);
 
 
+    // 백그라운드 실행중 재실행시 오류 방지용 처리 
+    const handleAppStateChange = async (nextAppState:any) => {
+        const accessToken:any = await validateAccessToken();
+        if(accessToken==='expired'|| accessToken==null || accessToken==undefined){
+            goLogin();
+        }
+    };
+
+    useEffect(()=>{ 
+        const listener = AppState.addEventListener('change', handleAppStateChange);
+        return () => {
+            listener.remove();
+        };
+    },[]);
 
 
     return(

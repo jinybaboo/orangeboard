@@ -21,6 +21,7 @@ const MypageSetting_W = (props:any) => {
         await handleDataFromWeb(navigation, e.nativeEvent.data);
     };
 
+    // 이 페이지에서 홈화면 돌아가면 홈화면 데이터 및 피드 리프레시 되도록 설정
     useEffect(() => {
         return () => {
             DeviceEventEmitter.emit('backFromHomeReload');

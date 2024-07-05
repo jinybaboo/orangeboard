@@ -5,7 +5,7 @@ import WebView from "react-native-webview";
 
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { BASE_URL } from "../common/variables_w";
-import { Linking, Platform } from "react-native";
+import { DeviceEventEmitter, Linking, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { safeAreaView } from "../common/commonStyle";
 import { handleDataFromWeb } from "../common/navigator_w";
@@ -26,6 +26,13 @@ const Report_W = (props:any) => {
     function handleLoadEnd(){
         setIsLoading(false);
     }
+
+    // 이 페이지에서 홈화면 돌아가면 홈화면 데이터 및 피드 리프레시 되도록 설정
+    useEffect(() => {
+        return () => {
+            DeviceEventEmitter.emit('backFromHomeReload');
+        }
+    }, []);
     
     return (
             <SafeAreaView style={safeAreaView}>

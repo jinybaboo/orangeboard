@@ -317,7 +317,7 @@ export const PaymentSubPort_N = (props:any) => {
      useEffect(()=>{
         // 결제 성공시 listener
         let purchaseUpdateSubscription:any ='';
-        console.log('결제 성공 리스너 작동!!!');
+        console.log('결제 성공 리스너 작동!!!'); 
 
 
         purchaseUpdateSubscription = purchaseUpdatedListener(

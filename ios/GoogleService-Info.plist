@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>814764827491-jedtgs2ok5nf1rkej7112fum0vhav5ag.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.814764827491-jedtgs2ok5nf1rkej7112fum0vhav5ag</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>814764827491-1ea4k17eji8mt2jf4n4unk108jipoiu6.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAIWbwHggvc5Mn3iAJtYHX-G76YYpV0c8A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>814764827491</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.name.orangeboard</string>
+	<key>PROJECT_ID</key>
+	<string>orangeboard-firebase</string>
+	<key>STORAGE_BUCKET</key>
+	<string>orangeboard-firebase.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:814764827491:ios:fe23faabf2ff9b120a2956</string>
+</dict>
+</plist>

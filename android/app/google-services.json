@@ -1,0 +1,78 @@
+{
+  "project_info": {
+    "project_number": "814764827491",
+    "project_id": "orangeboard-firebase",
+    "storage_bucket": "orangeboard-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814764827491:android:294e251bc37c57380a2956",
+        "android_client_info": {
+          "package_name": "com.orangeboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "814764827491-1ea4k17eji8mt2jf4n4unk108jipoiu6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orangeboard",
+            "certificate_hash": "433054717dbcff9edce4eefc011052b85dd1058f"
+          }
+        },
+        {
+          "client_id": "814764827491-464kpium61mf5cqovim90b6jmtfm2g69.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orangeboard",
+            "certificate_hash": "d276bdc562a090e1ea32fad91ee60eeeb5127516"
+          }
+        },
+        {
+          "client_id": "814764827491-6b7o7ib8adh92d3qinqfp77no61ero76.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orangeboard",
+            "certificate_hash": "0d1727d438e314ac6b05a8ea2389dc182ac7b750"
+          }
+        },
+        {
+          "client_id": "814764827491-rpmj7i6f2bmimke3di4qqd86nrtbk4hu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.orangeboard",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "814764827491-rlfe03ev6efmsiaq968llth9bikn6102.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5v_kk8SB814EOMj_vbzI5VUL0zRHRGrE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814764827491-rlfe03ev6efmsiaq968llth9bikn6102.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "814764827491-6og0dpnieerklct22frs6cgh2upiik65.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dmonster.orange"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,3 +1,25 @@
+pod 'GoogleUtilities', :modular_headers => true
+pod 'FirebaseStorageInternal', :modular_headers => true
+pod 'FirebaseAppCheckInterop', :modular_headers => true
+pod 'FirebaseAuthInterop', :modular_headers => true
+pod 'FirebaseCore', :modular_headers => true
+pod 'FirebaseCoreExtension', :modular_headers => true
+
+pod 'naveridlogin-sdk-ios'
+
+permissions_path = '../node_modules/react-native-permissions/ios'
+
+
+pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
+pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+pod 'Permission-PhotoLibrary', :path => "#{permissions_path}/PhotoLibrary"
+pod 'Permission-PhotoLibraryAddOnly', :path => "#{permissions_path}/PhotoLibraryAddOnly"
+pod 'Permission-StoreKit', :path => "#{permissions_path}/StoreKit"
+
+pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
+
+
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 require File.join(File.dirname(`node --print "require.resolve('react-native/package.json')"`), "scripts/react_native_pods")
 
@@ -28,6 +50,10 @@ target 'orangeboard' do
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false',
   )
 
+  
+  pod 'ChannelIOSDK', podspec: 'https://mobile-static.channel.io/ios/latest/xcframework.podspec'
+  pod 'RNChannelIO', :path => '../node_modules/react-native-channel-plugin'
+
   post_install do |installer|
     react_native_post_install(
       installer,
@@ -47,6 +73,7 @@ target 'orangeboard' do
       end
     end
   end
+  
 
   post_integrate do |installer|
     begin

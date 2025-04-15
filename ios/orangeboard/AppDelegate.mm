@@ -2,12 +2,20 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
+#import <Firebase.h>
+#import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
+#import <RNKakaoLogins.h>
+#import <ChannelIOFront/ChannelIOFront-swift.h>
+
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   self.moduleName = @"main";
+  [ChannelIO initialize:application];
+  [FIRApp configure];
+   
 
   // You can add your custom initial props in the dictionary below.
   // They will be passed down to the ViewController used by React Native.
@@ -32,7 +40,21 @@
 
 // Linking API
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
+  
+  // kakao login
+   if([RNKakaoLogins isKakaoTalkLoginUrl:url]) {
+      return [RNKakaoLogins handleOpenUrl: url];
+   }
+   
+   // for naver login
+   if ([url.scheme isEqualToString:@"naverloginfinal"]) {
+     return [[NaverThirdPartyLoginConnection getSharedInstance] application:application openURL:url options:options];
+   }
+  
+  
   return [super application:application openURL:url options:options] || [RCTLinkingManager application:application openURL:url options:options];
+  
+  return YES;
 }
 
 // Universal Links

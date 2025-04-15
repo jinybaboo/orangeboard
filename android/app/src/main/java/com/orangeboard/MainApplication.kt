@@ -15,6 +15,11 @@ import com.facebook.soloader.SoLoader
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
 
+
+// 채널톡 관련 import
+import com.zoyi.channel.plugin.android.ChannelIO;  //채널톡 추가
+import com.zoyi.channel.rn.RNChannelIOPackage;  //채널톡 추가
+
 class MainApplication : Application(), ReactApplication {
 
   override val reactNativeHost: ReactNativeHost = ReactNativeHostWrapper(
@@ -46,6 +51,8 @@ class MainApplication : Application(), ReactApplication {
       load()
     }
     ApplicationLifecycleDispatcher.onApplicationCreate(this)
+
+    ChannelIO.initialize(this) //채널톡 추가
   }
 
   override fun onConfigurationChanged(newConfig: Configuration) {

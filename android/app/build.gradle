@@ -90,8 +90,8 @@ android {
         applicationId "com.orangeboard"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 89
-        versionName "2.1.39"
+        versionCode 90
+        versionName "2.1.40"
         missingDimensionStrategy 'store', 'play'
     }
     signingConfigs {

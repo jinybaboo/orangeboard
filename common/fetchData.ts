@@ -191,7 +191,7 @@ export const getPayment_Faq = async() =>{
         const res = await axios.get(`${DATA_FETCH_URL}/v2/products/faqs`, {headers:{'Authorization' : accessToken,}});
         return res.data?.list;
     } catch (error:any) {
-        return error.response.data.message;
+        return null
     }
 }
 

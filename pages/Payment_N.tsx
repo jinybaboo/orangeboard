@@ -4,88 +4,150 @@ import { StatusBar } from "expo-status-bar";
 import {  decimalRound, getDday, thousandComma } from "../common/commonFunc";
 import { useAppDispatch } from "../store";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { LineEEEEEE, OrangeBtnPress, OrangeBtnTxt, Space } from "../common/commonStyledComp";
-import { Platform, Pressable } from "react-native";
-import { getPayment_Faq, getPayment_ProductReportAndPort } from "../common/fetchData";
+import colors from "../common/commonColors";
+import { LineEEEEEE, Space } from "../common/commonStyledComp";
+import { Alert, Platform, Pressable } from "react-native";
+import { getPayment_ProductReportAndPort } from "../common/fetchData";
 
-import { initConnection, requestSubscription, getSubscriptions, Sku, finishTransaction, purchaseErrorListener, purchaseUpdatedListener, type ProductPurchase, type PurchaseError, type SubscriptionPurchase, flushFailedPurchasesCachedAsPendingAndroid, getAvailablePurchases,} from 'react-native-iap';
+import { initConnection, requestSubscription, getSubscriptions, Sku, finishTransaction, purchaseErrorListener, purchaseUpdatedListener, type ProductPurchase, type PurchaseError, type SubscriptionPurchase, flushFailedPurchasesCachedAsPendingAndroid,} from 'react-native-iap';
 import { checkNavigator } from "../common/navigator_w";
-
-import { Shadow } from 'react-native-shadow-2';
 
 const os = Platform.OS;
 
 const ScrollView = styled.ScrollView`
-    flex:1; background-color: #FFFFFF; padding: 22px 20px; 
+    flex:1; background-color: #FFFFFF; padding: 22px 22px; 
 `
 
-const TopTitle = styled.Text`
-    font-family: 'noto700';font-size: 32px; line-height:36px; color:#4C4C4C; text-align: center;
+const TopBanner = styled.View`
+    width: 100%; height:118px; background-color: ${colors.orangeBorder}; border-radius: 5px; align-items: center; justify-content: center;
+`
+const TopBannerTxt1 = styled.Text`
+    font-family: 'noto500';font-size: 14px; line-height:17px; color:#FFF; text-align: center;
+`
+const TopBannerTxt2 = styled.Text`
+    font-family: 'noto700';font-size: 18px; line-height:24px; color:#FFF; text-align: center;
+`
+const PayTitleView = styled.View`
+    flex-direction: row;
+`
+const PayTitle = styled.Text`
+    font-family: 'noto700';font-size: 18px; line-height:21px; color:#333;
+`
+const OrgImg = styled.Image`
+    width: 18px; height:18px; margin-left: 3px;
+`
+const PayTitleTxt = styled.Text`
+    font-family: 'noto300';font-size: 12px; line-height:15px; color:#555; padding-top: 6px;
 `
 
-const TopSubTitle = styled.Text`
-    font-family: 'noto500';font-size: 14px; line-height:18px; color:#777; text-align: center; margin-top: 10px;
-`
-const ShadowInner = styled.View`
-    width: 100%; padding: 25px 25px 20px;
-    border-width: 1px; border-color: #EEE; border-radius: 12px;
 
+const CheckTxtView = styled.View`
+    flex-direction: row; height: 16px; margin-bottom: 12px;
 `
-const PersonImgBox = styled.View`
-    flex-direction: row; justify-content: center;
-`
-const PersonImg = styled.Image`
-    width: 20px; height: 20px;
-`
-const SubTxt1 = styled.Text`
-    font-family: 'noto500';font-size: 16px; line-height:20px; color:#4C4C4C; text-align: center; margin-top: 8px;
-`
-const PriceBox = styled.View`
-    flex-direction: row; justify-content: center; padding-top:5px; align-items: center;
-`
-const PriceTxt1 = styled.Text`
-    font-family: 'noto700';font-size: 24px; line-height:28px; color:#4C4C4C; text-align: center; 
-`
-const PriceTxt2 = styled.Text`
-    font-family: 'noto500';font-size: 15px; line-height:19px; color:#999; text-align: center; 
-`
-const DiscountTxtBox = styled.View`
-    flex-direction: row; align-items: center; justify-content: center; padding-top: 10px;
-`
-const DiscountTxt1 = styled.Text`
-    font-family: 'noto700';font-size: 14px; line-height:18px; color:#FF7900;
-`
-const DiscountTxt2 = styled.Text`
-     font-family: 'noto500';font-size: 14px; line-height:18px; color:#999; padding-left: 5px; text-decoration: line-through;
-`
-const CheckTxtBox = styled.View`
-    flex-direction: row; align-items: center; justify-content: center; margin-bottom: 10px;
+const OrangeCheck = styled.Image`
+    width: 16px; height: 16px; 
 `
 const CheckTxt = styled.Text`
-    font-family: 'noto500';font-size: 14px; line-height:18px; color:#777; 
+    font-family: 'noto400';font-size: 14px; line-height:17px; color:#333; padding-left: 11px;
 `
-const CheckImg = styled.Image`
-    width: 14px; height: 14px; margin-right: 3px;
+const BtnPressView = styled.View`
+    justify-content: center; align-items: center;
 `
-const FaqBox = styled.View`
-    width: 100%; height: 60px; border-bottom-width:1px; border-bottom-color: #EEE;
-    flex-direction: row; align-items: center; justify-content: space-between; padding:0 5px;
+const BtnPress = styled.Pressable`
+    width:100px; height:40px; background-color:${colors.orangeBorder}; border-radius: 20px; justify-content: center; align-items: center;
 `
-const FaqTitle = styled.Text`
-     font-family: 'noto500';font-size: 15px; line-height:22px; color:#333;
+const BtnTxt = styled.Text`
+    font-family: 'noto500';font-size: 15px; line-height:18px; color:#fff; padding-top: 2px;
 `
-const Arrow = styled.Image`
-    width: 20px; height: 20px;
+const RadioView = styled.View`
+    background-color: #FBFBFB; border-radius: 10px;
 `
-const FaqContent = styled.Text`
-    font-family: 'noto400';font-size: 15px; line-height:24px; color:#4C4C4C; padding:20px 7px;
+const RadioBox = styled.View`
+    width: 100%; height:50px; flex-direction:row; align-items: center; padding-left: 11px; padding-right: 16px; justify-content: space-between; position: relative;
 `
+const RadioLine = styled.View`
+    width: 100%; height:1px; background-color: rgba(238, 238, 238, 0.5);
+`
+const RadioLeft = styled.View`
+    flex-direction: row; position: relative;
+`
+const RadioImg = styled.Image`
+    width: 16px; height: 16px; 
+`
+const RadioTxt1 = styled.Text`
+    font-family: 'noto400';font-size: 14px; line-height:17px; color:#333; padding-left: 11px; padding-top: 1px;
+`
+const RadioTxt2 = styled(RadioTxt1)`
+    font-family: 'noto500'; color:${colors.orangeBorder};  
+`
+const RadioTxt3 = styled(RadioTxt1)`
+    font-family: 'noto500'; color:${colors.orangeBorder}; color: #999; font-size: 9px; padding-left: 40px; margin-top: -15px; padding-bottom: 3px;
+`
+const RadioTxt4 = styled.Text`
+    font-family: 'noto700';font-size: 8px; line-height:11px; color:${colors.orangeBorder}; position: absolute; left:28px; top:-12px;
+`
+const RadioTxt5 = styled.Text`
+    font-family: 'noto500';font-size: 10px; line-height:17px; color:#888; text-decoration: line-through; 
+`
+const RadioTx6 = styled.Text`
+    font-family: 'noto400';font-size: 8px; line-height:11px; color:#555; position: absolute; right:17px; bottom:4px;
+`
+
+//유의사항
+const InfoView = styled.View`
+    border-radius: 5px; background: rgba(246, 246, 246, 0.50); padding:20px 13px 20px;
+`
+
+const InfoTitle = styled.Text`
+    font-family: 'noto500';font-size: 12px; line-height:15px; color:#777;
+`
+const InfoTxtBox = styled.View`
+    flex-direction: row; margin-bottom: 2px;
+`
+const InfoTxtCircle = styled.View`
+    width:4px; height:4px; border-radius: 50px; background-color:#999; margin-top: ${os==='ios'?8:7}px; margin-right: 8px;
+`
+const InfoTxt = styled.Text`
+    font-family: 'noto400';font-size: 11px; line-height:20px; color:#999;
+`
+
+const Free1MBox = styled.View`
+    width: 100%; height: 50px; background: #FF7900; padding:0 15px; justify-content: center;
+`
+const FreeTxt1 = styled.Text`
+    font-family: 'noto700';font-size: 14px; line-height:20px; color:#fff; 
+`
+const FreeTxt2 = styled.Text`
+    font-family: 'noto500';font-size: 12px; line-height:15px; color:#fff; 
+`
+const FreeTxtBold = styled(FreeTxt2)`
+    font-family: 'noto700';
+`
+const FreeBoxView = styled.View`
+    width: 100%; justify-content: flex-end; flex-direction: row;
+`
+const FreeBoxImg = styled.Image`
+    width: 80px; height:32.92px;
+`
+const AllGoSuBox = styled.View`
+    border-width: 2px; border-color: #FF7900; border-radius: 10px; overflow: hidden;
+`
+
 export const Payment_N = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigation();
 
+    // const [reportList, setReportList] = useState<any>([]);
     const [portList, setPortList] = useState<any>([]);
 
+    const [selectedReport, setSelectedReport] = useState('');
+    const [selectedReportData, setSelectedReportData] = useState('');
+
+
+    const [selectedPort, setSelectedPort] = useState('');
+    const [selectedPortData, setSelectedPortData] = useState<any>();
+
+    const [selectedPortAll, setSelectedPortAll] = useState('');
     
     const [isLoading, setIsLoading] = useState(true);
 
@@ -97,8 +159,6 @@ export const Payment_N = () => {
 
     const [isCurrentUser, setIsCurrentUser] = useState<any>(false);
 
-    const [faq, setFaq] = useState<any>([]);
-    const [openFaq, setOpenFaq] = useState<any>(null);
 
     function compareByPrice(a:any, b:any) {
         return a.appPrice - b.appPrice;
@@ -106,12 +166,16 @@ export const Payment_N = () => {
 
     const getData = async () =>{
         const data = await getPayment_ProductReportAndPort();
+        // setReportList(data.reportProductList);
+        // console.log(data);
+        
         
         const portList = data.portfolioProductList;
         portList.sort(compareByPrice);
         setPortList(portList);
 
         const portfolioIds:any = portList.reduce((returnArr:any, item:any) =>{	
+            console.log(item.isCurSubscriptionProduct);
             
             item.isCurSubscriptionProduct && setIsCurrentUser(true);
 
@@ -131,14 +195,13 @@ export const Payment_N = () => {
         },[]);	
         setPortfolioIdsIos(portfolioIdsIos)
 
-        const faqs = await getPayment_Faq();
-        setFaq(faqs)
 
         setIsLoading(false);
     }
     
 
     useEffect(()=>{
+        
         getData();
     }, []);
 
@@ -146,25 +209,6 @@ export const Payment_N = () => {
     useEffect(()=>{
         initIAP(); //초기화
     },[isLoading]);
-
-
-
-    useEffect(() => {
-        const clearStuckTransactions = async () => {
-          try {
-            const purchases = await getAvailablePurchases();
-            console.log('🧾 정리 대상 purchases:');
-            for (const p of purchases) {
-              await finishTransaction({ purchase: p, isConsumable: false });
-              console.log(`✅ 트랜잭션 정리 완료: ${p.productId}`);
-            }
-            console.log(`✅ 트랜잭션 정리 완료: Finished`);
-          } catch (e) {
-            console.warn('❌ 트랜잭션 정리 실패:', e);
-          }
-        };
-        os === 'ios' && clearStuckTransactions();
-    }, []);
 
 
     if(isLoading){
@@ -206,156 +250,309 @@ export const Payment_N = () => {
     }
 
 
-    if(isLoading){return null;}
+    const checkBuyReport = () =>{
+        if(selectedReport==='' || !selectedReport.includes('OBR')){
+            Alert.alert('안내','구독할 리포트를 선택해 주세요.');
+            return;
+        }else{
+            checkNavigator(navigation, 'paymentSubscription_report' , {data:selectedReportData})
+        }
+    }
 
-    const chkTxt = ['운용 보고서 열람', '고수 실시간 계좌 공유', '고수톡 실시간 채팅 서비스 제공', '고수 활동 푸시알림 제공']
+    const checkBuyPortfolio = () =>{
+        if(selectedPort==='' || !selectedPort.includes('OBP')){
+            Alert.alert('안내','구독할 이용권을 선택해 주세요.');
+            return;
+        }else{
+            checkNavigator(navigation, 'paymentSubscription_port' , {data:selectedPortData, isCurrentUser})
+        }
+    }
+
+    const checkBuyPortfolioAll = () =>{
+        if(selectedPortAll==='' || !selectedPortAll.includes('OBP')){
+            Alert.alert('안내','전체 고수의계좌를 선택해 주세요.');
+            return;
+        }else{
+            checkNavigator(navigation, 'paymentSubscription_port' , {data:selectedPortData})
+        }
+    }
+
+    if(isLoading){return null;}
     
     return (
         <ScrollView>
             <StatusBar style='dark' />
             <Space height={10} />
 
-            <TopTitle>이용권</TopTitle>
-            <TopSubTitle>필요한 구독권을 합리적인 가격으로 이용해 보세요</TopSubTitle>
+            {/* 
+            <PayTitleView>
+                <PayTitle>리포트 구독</PayTitle>
+                <OrgImg source={require('../assets/icons_w/orange.png')}/>
+            </PayTitleView>
+            <PayTitleTxt>오렌지보드의 모든 리포트를 무제한 열람할 수 있는 플랜입니다.</PayTitleTxt>
+
+            <Space height={16} />
+            <LineEEEEEE />
+
+            <Space height={16} />
+            <CheckTxtView>
+                <OrangeCheck source={require('../assets/icons_w/check_orange.png')} />
+                <CheckTxt>리포트 무제한 열람</CheckTxt>
+            </CheckTxtView>
+            <CheckTxtView>
+                <OrangeCheck source={require('../assets/icons_w/check_orange.png')} />
+                <CheckTxt>유료 리포트 발행 Push 알림</CheckTxt>
+            </CheckTxtView>
+            <CheckTxtView>
+                <OrangeCheck source={require('../assets/icons_w/check_orange.png')} />
+                <CheckTxt>관심 크리에이터가 유료 리포트 발행 시 Push 알림</CheckTxt>
+            </CheckTxtView>
+
+            <Free1MBox>
+                <FreeTxt1>리포트 구독 혜택</FreeTxt1>
+                <FreeTxt2>최초 구독시 첫달 무료로 이용 가능!</FreeTxt2>
+            </Free1MBox>
+            <Space height={15} />
+
+            <RadioView>
+                {reportList.map((item:any, idx:number)=>{
+                    const {ProductOptionId, isTrialAvailable, SubscriptionInfo, appProductName, price, regularPrice} = item;
+                    
+                    const priceStr = thousandComma(price);
+                    const regularPriceStr = thousandComma(regularPrice);
+                    const monthPriceStr = thousandComma(decimalRound(price/12,0));
+                    const discountRateStr = decimalRound((1- price/regularPrice)*100, 0)
+                        return(
+                            <Pressable key={'report_'+idx} onPress={()=>{setSelectedReport(ProductOptionId); setSelectedReportData(item)}}>
+                            <RadioBox>
+                                <RadioLeft>
+                                    <RadioImg source={item.ProductOptionId == selectedReport ? require('../assets/icons_w/radio_on_orange.png') : require('../assets/icons_w/radio_off_orange.png')}/>
+                                    <RadioTxt1>{item.productName}</RadioTxt1>
+                                    {regularPrice!==null && <RadioTxt4>{discountRateStr}%할인</RadioTxt4>}
+                                </RadioLeft>
+                                <RadioTxt2>
+                                    {regularPrice !==null && <RadioTxt5>정가 {regularPriceStr}원 </RadioTxt5>}
+                                    {priceStr}원
+                                </RadioTxt2>
+                                <RadioTx6>{ProductOptionId==='OBRPY' && `월 ${monthPriceStr}원`} (V.A.T 별도)</RadioTx6>
+                            </RadioBox>
+                            <RadioLine />
+                            </Pressable>
+                        )
+                    })
+                }
+            </RadioView> 
+
+            <Space height={25} />
+
+            <BtnPressView>
+                <BtnPress onPress={checkBuyReport}>
+                    <BtnTxt>구독하기</BtnTxt>
+                </BtnPress>
+            </BtnPressView>
+
+
+            <Space height={70} />
+            */}
+
+            <PayTitleView>
+                <PayTitle>고수의계좌 정기구독</PayTitle>
+                <OrgImg source={require('../assets/icons_w/orange.png')}/>
+            </PayTitleView>
+            <PayTitleTxt>고수의계좌 서비스와 고수톡 혜택을 받을 수 있는 플랜입니다.</PayTitleTxt>
+
+            <Space height={16} />
+            <LineEEEEEE />
+
+            <Space height={16} />
+            <CheckTxtView>
+                <OrangeCheck source={require('../assets/icons_w/check_orange.png')} />
+                <CheckTxt>운용 보고서 열람</CheckTxt>
+            </CheckTxtView>
+            <CheckTxtView>
+                <OrangeCheck source={require('../assets/icons_w/check_orange.png')} />
+                <CheckTxt>실시간 고수톡 서비스 제공 </CheckTxt>
+            </CheckTxtView>
+            <CheckTxtView>
+                <OrangeCheck source={require('../assets/icons_w/check_orange.png')} />
+                <CheckTxt>고수의 계좌 공유</CheckTxt>
+            </CheckTxtView>
+            <Space height={15} />
+
+            {/* 전체 고수*/}
+            {/* <FreeBoxView>
+                <FreeBoxImg source={require('../assets/icons_w/free_1m.png')}/>
+            </FreeBoxView>
+            <Space height={5}/>
+            <AllGoSuBox>
+                <Free1MBox>
+                    <FreeTxt1>고수의계좌 전체 구독 혜택</FreeTxt1>
+                    <FreeTxt2><FreeTxtBold>전체고수</FreeTxtBold> 최초 구독시 첫달 무료로 이용 가능!</FreeTxt2>
+                </Free1MBox>
+                <Space height={6}/>
+                <RadioView>
+                    {portList.map((item:any, idx:number)=>{
+                        
+                        let {ProductOptionId, isTrialAvailable, SubscriptionInfo, appProductName, price, regularPrice} = item;
+                        const priceStr = thousandComma(price);
+                        const regularPriceStr = thousandComma(regularPrice);
+                        const discountRateStr = decimalRound((1- price/regularPrice)*100, 0)
+
+                        const freeEndDd = SubscriptionInfo?.freeEndDd;
+                        let dDay = freeEndDd===undefined?-1:getDday(freeEndDd);
+
+                        let nativeInfo:any =[];
+
+                        if(os==='android' && nativeDataAndroid.length!=0){
+                            nativeInfo = nativeDataAndroid.filter( (item:any)=> {							
+                                return item.productId == appProductName;
+                            });
+        
+                            const androidTokenCount = nativeInfo[0]?.subscriptionOfferDetails.length;
+                            nativeInfo = nativeInfo[0]?.subscriptionOfferDetails;
+                            // console.log(androidTokenCount, nativeInfo)
+        
+                            if(androidTokenCount<2){
+                                isTrialAvailable = false;
+                            }
+                        }
+
+                        if(ProductOptionId!=='OBP99'){ 
+                            return null;
+                        }
+
+                        return(
+                            <Pressable key={'port_'+idx} onPress={()=>{setSelectedPort(''); setSelectedPortAll(item.ProductOptionId); setSelectedPortData(item)}}>
+                            <RadioBox>
+                                <RadioLeft>
+                                    <RadioImg source={item.ProductOptionId == selectedPortAll ? require('../assets/icons_w/radio_on_orange.png') : require('../assets/icons_w/radio_off_orange.png')}/>
+                                    <RadioTxt1>{item.productName}</RadioTxt1>
+                                    <RadioTxt4>세트 {discountRateStr}% 할인</RadioTxt4>
+                                </RadioLeft>
+                                <RadioTxt2>
+                                    <RadioTxt5>정가 {regularPriceStr}원 </RadioTxt5>
+                                    {dDay>=0?0:priceStr}원
+                                </RadioTxt2>
+                                <RadioTx6>(V.A.T 별도)</RadioTx6>
+                            </RadioBox>
+                            <RadioLine />
+                            </Pressable>
+                        )
+                    })
+                    }
+                </RadioView>
+            </AllGoSuBox> 
+           
+
             
-            <Space height={30} />
 
-            {portList.map((item:any, idx:number)=>{
-                 let {ProductOptionId, isTrialAvailable, SubscriptionInfo, appProductName, price, regularPrice, productName} = item;
-                 const priceStr = thousandComma(price);
-                 const regularPriceStr = thousandComma(regularPrice);
-                 const discountRateStr = decimalRound((1- price/regularPrice)*100, 0)
+            <Space height={25} />
+            <BtnPressView>
+                <BtnPress onPress={checkBuyPortfolioAll}>
+                    <BtnTxt>구독하기</BtnTxt>
+                </BtnPress>
+            </BtnPressView>
+            <Space height={60} />
 
-                 const freeEndDd = SubscriptionInfo?.freeEndDd;
-                 let dDay = freeEndDd===undefined?-1:getDday(freeEndDd);
+            */}
 
-                 let nativeInfo:any =[];
+            {/* 개별 고수 */}
+            <RadioView>
+                {portList.map((item:any, idx:number)=>{
+                    
+                    let {ProductOptionId, isTrialAvailable, SubscriptionInfo, appProductName, price, regularPrice} = item;
+                    const priceStr = thousandComma(price);
+                    const regularPriceStr = thousandComma(regularPrice);
+                    const discountRateStr = decimalRound((1- price/regularPrice)*100, 0)
 
-                 if(os==='android' && nativeDataAndroid.length!=0){
-                     nativeInfo = nativeDataAndroid.filter( (item:any)=> {							
-                         return item.productId == appProductName;
-                     });
- 
-                     const androidTokenCount = nativeInfo[0]?.subscriptionOfferDetails.length;
-                     nativeInfo = nativeInfo[0]?.subscriptionOfferDetails;
-                     // console.log(androidTokenCount, nativeInfo)
- 
-                     if(androidTokenCount<2){
-                         isTrialAvailable = false;
-                     }
-                 }
+                    const freeEndDd = SubscriptionInfo?.freeEndDd;
+                    let dDay = freeEndDd===undefined?-1:getDday(freeEndDd);
 
+                    let nativeInfo:any =[];
 
+                    if(os==='android' && nativeDataAndroid.length!=0){
+                        nativeInfo = nativeDataAndroid.filter( (item:any)=> {							
+                            return item.productId == appProductName;
+                        });
+    
+                        const androidTokenCount = nativeInfo[0]?.subscriptionOfferDetails.length;
+                        nativeInfo = nativeInfo[0]?.subscriptionOfferDetails;
+                        
+                        // console.log(androidTokenCount, nativeInfo)
+    
+                        if(androidTokenCount<2){
+                            isTrialAvailable = false;
+                        }
+                    }
 
-                return(
-                    <Shadow
-                        key = {'shadow_'+idx}		
-                        startColor="rgba(0,0,0,0.05)"
-                        endColor="rgba(255, 255, 255, 0.05)"
-                        distance={8}
-                        style={{width:'100%', backgroundColor:'#FFFFFF', borderRadius:12, marginBottom:20}}
-                        offset={[0,3]}
-                    >	
-                        <ShadowInner>
-                            <PersonImgBox>
-                                <PersonImg source={require('../assets/icons_w/person.png')}/>
-                               {ProductOptionId !== 'OBPG1' &&
-                                <>
-                                <PersonImg source={require('../assets/icons_w/person.png')}/>
-                                <PersonImg source={require('../assets/icons_w/person.png')}/>
-                                </>
-                                }
-                                {ProductOptionId === 'OBPG5' &&
-                                <>
-                                <PersonImg source={require('../assets/icons_w/person.png')}/>
-                                <PersonImg source={require('../assets/icons_w/person.png')}/>
-                                </>
-                                }
-                            </PersonImgBox>
-                            <SubTxt1>{productName}</SubTxt1>
+                    if(ProductOptionId==='OBP99'){ 
+                        return null;
+                    }
 
-                            {ProductOptionId === 'OBPG1'?
-                            <Space height={15}/>
-                            :
-                            <DiscountTxtBox>
-                                <DiscountTxt1>{discountRateStr}%</DiscountTxt1>
-                                <DiscountTxt2>{regularPriceStr}원</DiscountTxt2>
-                            </DiscountTxtBox>
-                            }
+                    return(
+                        <Pressable key={'port_'+idx} onPress={()=>{setSelectedPortAll(''); setSelectedPort(item.ProductOptionId); setSelectedPortData(item)}}>
+                        <RadioBox>
+                            <RadioLeft>
+                                <RadioImg source={item.ProductOptionId == selectedPort ? require('../assets/icons_w/radio_on_orange.png') : require('../assets/icons_w/radio_off_orange.png')}/>
+                                <RadioTxt1>
+                                    {/* <RadioTxt2>{dDay<0 && isTrialAvailable && '[한달무료]  '}</RadioTxt2> */}
+                                    <RadioTxt2 style={{fontFamily: 'noto700'}}>{dDay>=0 &&'[무료체험]  '}</RadioTxt2>
+                                    {item.productName}
+                                </RadioTxt1>
+                                {regularPrice!==null && <RadioTxt4>{discountRateStr}%할인</RadioTxt4>}
+                            </RadioLeft>
+                            <RadioTxt2>
+                                {regularPrice !==null && <RadioTxt5>정가 {regularPriceStr}원 </RadioTxt5>}
+                                {dDay>=0?0:priceStr}원
+                            </RadioTxt2>
+                            <RadioTx6>(V.A.T 별도)</RadioTx6>
+                        </RadioBox>
+                        {dDay>=0 && <RadioTxt3>* 구독없이 무료로 이용할 수 있어요</RadioTxt3>}
+                        <RadioLine />
+                        </Pressable>
+                    )
+                })
+                }
+            </RadioView>
 
-                            <PriceBox>
-                                <PriceTxt1>{priceStr}원</PriceTxt1>
-                                <PriceTxt2> / 월</PriceTxt2>
-                            </PriceBox>
-
-                            <Space height={20} />
-                            <LineEEEEEE />
-                            <Space height={20} />
-
-                            {chkTxt.map((item:any, idx2:number)=>{
-                                return(
-                                    <CheckTxtBox key={'chk_'+idx2}>
-                                        <CheckImg source={require('../assets/icons_w/check_orange.png')}/>
-                                        <CheckTxt>{item}</CheckTxt>
-                                    </CheckTxtBox>)
-                                })
-                            }
-
-                                    {ProductOptionId === 'OBPG1'?
-                                    <CheckTxtBox>
-                                        <CheckImg source={require('../assets/icons_w/check_orange.png')}/>
-                                        <CheckTxt>고수 변경횟수 없음</CheckTxt>
-                                    </CheckTxtBox>
-                                    :
-                                    <CheckTxtBox>
-                                        <CheckImg source={require('../assets/icons_w/check_orange.png')}/>
-                                        <CheckTxt>고수 변경횟수 1회</CheckTxt>
-                                    </CheckTxtBox>
-                                    }
-
-                            <Space height={10} />
-                            <OrangeBtnPress 
-                                onPress={()=>{
-                                    checkNavigator(navigation, 'paymentSubscription_port' , {data:item, isCurrentUser})
-                                }}
-                                style={{height:48, lineHeight:48}}
-                            >
-                                <OrangeBtnTxt>구매하기</OrangeBtnTxt>
-                            </OrangeBtnPress>
-
-                            <Space height={10} />
-                        </ShadowInner>
-                    </Shadow>
-                )
-            })}
+            <Space height={25} />
+            <BtnPressView>
+                <BtnPress onPress={checkBuyPortfolio}>
+                    <BtnTxt>구독하기</BtnTxt>
+                </BtnPress>
+            </BtnPressView>
 
 
-            <Space height={100} />
+            
+            <Space height={60} />
+            <InfoView>
+                <InfoTitle>유의사항</InfoTitle>
+                <Space height={5} />
 
-            <TopTitle>자주 묻는 질문</TopTitle>
-            <TopSubTitle>자주 묻는 질문을 모아 정리했어요</TopSubTitle>
+                <InfoTxtBox>
+                    <InfoTxtCircle/>
+                    <InfoTxt>구독 결제는 구독기간 마지막 날 진행되며 결제 후 구독기간은 자동 갱신됩니다.</InfoTxt>
+                </InfoTxtBox>
 
-            <Space height={24} />
+                <InfoTxtBox>
+                    <InfoTxtCircle/>
+                    <InfoTxt>구독 결제 갱신을 중단하고자 할 경우 구독기간 종료 하루 전 까지 구독을 해지 하셔야 합니다.</InfoTxt>
+                </InfoTxtBox>
 
-            {faq.map(({title, content}:any, idx:number)=>{
-                return(
-                    <Pressable 
-                        key={'faq_'+idx}
-                        onPress={()=>{openFaq === idx ? setOpenFaq(null) : setOpenFaq(idx)}}
-                    >
-                        <FaqBox>
-                            <FaqTitle>Q. {title}</FaqTitle>
-                            <Arrow source={idx===openFaq?
-                                require(`../assets/icons_w/arrow_up_faq.png`)
-                                :
-                                require(`../assets/icons_w/arrow_down_faq.png`)
-                            }/>
-                        </FaqBox>
-                        {idx === openFaq && <FaqContent>{content}</FaqContent>}
-                    </Pressable>
-                )
-            })}
-            <Space height={100} />
+                <InfoTxtBox>
+                    <InfoTxtCircle/>
+                    <InfoTxt>오렌지를 사용하여 콘텐츠를 열람한 이후에는 사용한 오렌지에 대한 구매 취소는 불가합니다.</InfoTxt>
+                </InfoTxtBox>
+
+                <InfoTxtBox>
+                    <InfoTxtCircle/>
+                    <InfoTxt>정기구독 중 해지할경우 당월 이후 서비스가 즉시 종료되고 구독결제가 이루어지지 않습니다.</InfoTxt>
+                </InfoTxtBox>
+            </InfoView>
+
+
+
+            <Space height={60}/>
         </ScrollView>
     );
 }

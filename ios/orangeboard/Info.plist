@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1.38</string>
+	<string>2.1.39</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -43,7 +43,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao64745d45b5067287b67ecd9a796c6713</string>
+				<string>kakao649c3c8ebdd09fe4d48939b9b4ccfba2</string>
 			</array>
 		</dict>
 		<dict>
@@ -62,7 +62,7 @@
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-5230413428612561~5119327329</string>
 	<key>KAKAO_APP_KEY</key>
-	<string>64745d45b5067287b67ecd9a796c6713</string>
+	<string>649c3c8ebdd09fe4d48939b9b4ccfba2</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>naversearchapp</string>
